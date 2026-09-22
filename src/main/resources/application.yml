@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:auctiondb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update # Tự tạo bảng khi chạy app
+    show-sql: true
+server:
+  port: 8080
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
