@@ -12,6 +12,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtFilter) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Tắt CSRF vì dùng REST
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auctions").permitAll() // GET all auctions

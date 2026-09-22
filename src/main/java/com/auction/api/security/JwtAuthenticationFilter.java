@@ -18,7 +18,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         // Bỏ qua lọc với GET /api/auctions hoặc API auth, swagger
-        if (path.startsWith("/swagger") || path.startsWith("/v3/api-docs") || path.startsWith("/api/auth") || (path.startsWith("/api/auctions") && method.equals("GET"))) {
+        if (path.startsWith("/swagger") || path.startsWith("/v3/api-docs") ||
+                path.startsWith("/api/auth") || path.startsWith("/h2-console") ||
+                (path.equals("/api/auctions") && method.equals("GET"))) {
+
             filterChain.doFilter(request, response);
             return;
         }
