@@ -32,23 +32,34 @@ Hệ thống sử dụng **JSON Web Token (JWT)** thông qua Header `Authorizati
 
 ## 4. Hướng dẫn Triển khai & Khởi chạy
 
-Hệ thống hỗ trợ chạy trực tiếp trên môi trường Java hoặc đóng gói triển khai độc lập qua Docker. Cơ sở dữ liệu mặc định là **H2 In-memory**, tự động khởi tạo khi chạy ứng dụng.
+### Yêu cầu môi trường chuẩn bị (Prerequisites)
+* Java Development Kit (JDK) 17 trở lên.
+* Docker Desktop (nếu chọn triển khai qua Docker).
 
-### Chạy trực tiếp (Môi trường Local)
-*Yêu cầu: Java 17 và Maven.*
-./mvnw clean spring-boot:run
+### Cách 1: Chạy trực tiếp (Môi trường Local)
+1. Mở Terminal (PowerShell hoặc Command Prompt) ngay tại thư mục gốc của dự án, nơi chứa file pom.xml.
+2. Thực thi lệnh sau để hệ thống tự động dọn dẹp bộ nhớ đệm, tải thư viện và chạy ứng dụng:
+   mvnw.cmd clean spring-boot:run
+   (Lưu ý: Nếu chạy trên macOS/Linux, sử dụng lệnh ./mvnw clean spring-boot:run)
+3. Đợi tiến trình khởi động đến khi Terminal xuất hiện dòng báo Tomcat đã start thành công.
+4. Xác minh hệ thống hoạt động:
+   * Tài liệu API (Swagger): Mở trình duyệt truy cập http://localhost:8080/swagger-ui.html
+   * Cơ sở dữ liệu H2: Truy cập http://localhost:8080/h2-console
+     * JDBC URL: jdbc:h2:mem:auctiondb
+     * User Name: sa
+     * Password: (để trống)
 
-*   Web Server chạy tại: `http://localhost:8080`
-*   H2 Console: `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:auctiondb`)
+### Cách 2: Đóng gói và Triển khai qua Docker
+Quy trình này sử dụng file Dockerfile đã được cấu hình Multi-stage build (tách biệt môi trường build mã nguồn và môi trường chạy app để tối ưu dung lượng).
 
-### Triển khai qua Docker
-Dự án cung cấp `Dockerfile` chuẩn hóa, áp dụng cơ chế Multi-stage build để tách biệt môi trường biên dịch (chứa mã nguồn) và môi trường thực thi (chỉ chứa file jar), giúp tối ưu hóa dung lượng image.
-
-# Đóng gói image
-docker build -t auction-backend .
-
-# Khởi chạy container
-docker run -p 8080:8080 auction-backend
+1. Đảm bảo ứng dụng Docker Desktop đang chạy. Mở Terminal tại thư mục gốc dự án.
+2. Đóng gói mã nguồn thành Docker Image có tên auction-backend (lưu ý có dấu chấm . ở cuối lệnh):
+   docker build -t auction-backend .
+3. Khởi chạy Container từ Image vừa tạo. Lệnh này sẽ ánh xạ cổng 8080 và chạy ngầm:
+   docker run -d -p 8080:8080 --name auction-app auction-backend
+4. Xác minh hệ thống bằng cách truy cập các đường dẫn ở Cách 1.
+5. Khi cần dừng hệ thống, thực thi lệnh:
+   docker stop auction-app
 
 
 ## 5. Kiểm thử tải (Load Testing) trên Kaggle CPU
