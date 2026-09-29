@@ -16,12 +16,12 @@ Hệ thống giao tiếp hoàn toàn thông qua định dạng JSON. Tài liệu
 
 *   **Đường dẫn Swagger UI:** `http://localhost:8080/swagger-ui.html`
 
-| Method | Endpoint | Yêu cầu xác thực | Mô tả chức năng |
-| :--- | :--- | :--- | :--- |
-| **GET** | `/api/auctions` | Không | Lấy danh sách tổng hợp các phiên đấu giá. |
-| **GET** | `/api/auctions/{id}` | **Có (JWT)** | Lấy thông tin chi tiết của một phiên đấu giá cụ thể. |
-| **POST** | `/api/auctions/{id}/bids` | **Có (JWT)** | Thực hiện đặt giá thầu cho một sản phẩm (Payload JSON). |
-| **DELETE** | `/api/auctions/{id}` | **Có (JWT)** | Xóa phiên đấu giá (Chỉ dành cho chủ sở hữu). |
+| Method     | Endpoint                  | Yêu cầu xác thực | Mô tả chức năng                                         |
+|:-----------|:--------------------------| :--- |:--------------------------------------------------------|
+| **GET**    | `/api/auctions`           | Không | Lấy danh sách tổng hợp các phiên đấu giá.               |
+| **POST**   | `/api/auctions`           | **Có (JWT)** | Tạo phiên đấu giá mới.                                  |
+| **POST**   | `/api/auctions/{id}/bids` | **Có (JWT)** | Thực hiện đặt giá thầu cho một sản phẩm (Payload JSON). |
+| **DELETE** | `/api/auctions/{id}`      | **Có (JWT)** | Xóa phiên đấu giá (Chỉ dành cho chủ sở hữu).            |
 
 ## 3. Cơ chế Bảo mật & Xác thực
 
