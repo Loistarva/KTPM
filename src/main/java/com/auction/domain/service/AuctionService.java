@@ -11,6 +11,12 @@ public class AuctionService {
         this.auctionRepository = auctionRepository;
     }
 
+    public Auction createAuction(String title, Double startingPrice, Long ownerId) {
+        // ID bằng null vì DB (JPA) sẽ tự động sinh (Auto Increment)
+        Auction newAuction = new Auction(null, title, startingPrice, ownerId);
+        return auctionRepository.save(newAuction);
+    }
+
     public List<Auction> getAllAuctions() {
         return auctionRepository.findAll();
     }

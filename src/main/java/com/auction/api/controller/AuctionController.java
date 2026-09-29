@@ -4,6 +4,7 @@ import com.auction.domain.model.Auction;
 import com.auction.domain.service.AuctionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.auction.api.dto.request.AuctionCreateRequestDto;
 
 import java.util.List;
 
@@ -32,6 +33,13 @@ public class AuctionController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // POST: Cần xác thực (Tạo phiên đấu giá mới)
+    @PostMapping
+    public ResponseEntity<?> createAuction(@RequestBody AuctionCreateRequestDto request, @RequestAttribute("userId") Long userId) {
+        Auction created = auctionService.createAuction(request.getTitle(), request.getStartingPrice(), userId);
+        return ResponseEntity.status(201).body(created); // 201 Created
     }
 
     // DELETE: Cần xác thực
