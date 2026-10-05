@@ -1,13 +1,13 @@
-# Build stage
-FROM maven:3.9.4-eclipse-temurin-17 AS builder
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
-
-# Run stage
+COPY backend/pom.xml pom.xml
+RUN mvn -B -ntp dependency:go-offline
+COPY backend/src src
+RUN mvn -B -ntp package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
+RUN addgroup -S ktpm && adduser -S ktpm -G ktpm
+COPY --from=build /app/target/ktpm-backend-1.0.0.jar app.jar
+USER ktpm
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]

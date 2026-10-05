@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16.2
+    environment:
+      POSTGRES_DB: ktpm
+      POSTGRES_USER: ${DATABASE_USERNAME:-ktpm}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-ktpm_dev}
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    volumes:
+      - ktpm_simple_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d ktpm"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      DATABASE_URL: jdbc:postgresql://postgres:5432/ktpm
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-ktpm}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-ktpm_dev}
+      JWT_SECRET: ${JWT_SECRET:-ktpm-local-only-secret-change-before-production-0123456789}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173,http://localhost:8080}
+    ports:
+      - "127.0.0.1:${PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      BACKEND_UPSTREAM: backend:8080
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      backend:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+volumes:
+  ktpm_simple_postgres_data:
+
