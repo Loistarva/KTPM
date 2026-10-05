@@ -91,7 +91,7 @@ KTPM/
 │   ├── src/test/
 │   └── pom.xml
 ├── frontend/           Source giao diện, Dockerfile, Nginx, unit test/E2E
-├── scripts/            Launcher, test, demo, Docker smoke, benchmark
+├── scripts/            Launcher, test, demo, benchmark
 ├── docs/               Đặc tả API và hướng dẫn Kaggle
 ├── notebooks/          Notebook Kaggle CPU
 ├── Dockerfile          Đóng gói backend
@@ -273,34 +273,6 @@ Database tương ứng phải đang chạy. Với Docker, giá trị thực tế
 - 401: đăng nhập lại; 403: kiểm tra quyền; 409 khi bid: làm mới giá/trạng thái.
 - Lỗi tải dependency: kiểm tra Internet; không xóa database để xử lý.
 
-### 5.5. Đưa source lên GitHub và xuất gói chia sẻ
-
-Commit các thư mục `backend/` (source, test, pom, Maven wrapper), `frontend/` (source, test, package.json và package-lock.json, cấu hình), `scripts/`, `docs/`, `notebooks/`, cùng README, Dockerfile/Compose, `.dockerignore`, `.gitignore`, `.gitattributes` và `.env.example`. `backend/.mvn`, `backend/mvnw`, `backend/mvnw.cmd` là công cụ build cần giữ, không phải file thừa.
-
-Không commit `.env`/cấu hình riêng, database `.local`, `.tools`/cache, `node_modules`, `target`, `dist`, báo cáo test, log hoặc fixture token. `.gitignore` đã loại các phần này. Không chép code vào `.git`; Git tự quản lý lịch sử trong đó. Không đưa Docker image lên repository; người nhận build bằng Dockerfile.
-
-Tại gốc, khi quyết định commit:
-
-```powershell
-git status --short
-git diff --check
-git add -A
-git diff --cached --stat
-git diff --cached --name-only
-git commit -m "Complete KTPM phase 1 backend, frontend, Docker and tests"
-git push origin main
-```
-
-Lệnh trên áp dụng cho branch `main` và remote origin hiện tại; kiểm tra bằng `git branch --show-current`, `git remote -v`. Xem danh sách staged trước commit để đảm bảo không có dữ liệu riêng. Nếu có file không muốn commit, dùng `git restore --staged <file>` (giữ file trên máy). Các dòng `D` của `src/` và `pom.xml` cũ cần được commit vì dự án đã chuyển sang `backend/`/`frontend/`; không khôi phục code cũ. Một commit hiện tại lưu bản hoàn chỉnh, không tái tạo lịch sử các lần sửa chưa commit trước đó. Kiểm tra repository public theo yêu cầu đề bài.
-
-Muốn gửi source thành ZIP mà chưa commit:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/export-source.ps1
-```
-
-Gói ở `backend/.local/release/KTPM-source.zip`, chứa thư mục KTPM với source/tài liệu/cấu hình hiện tại, loại các file được Git bỏ qua và file cũ đã xóa. Gói không chứa lịch sử `.git`, không thay cho commit/push; không cần upload ZIP này lên GitHub. Nếu đã có ZIP cũ, xóa đúng ZIP đó hoặc truyền `-OutputPath` khác. Người nhận giải nén rồi chạy Docker theo mục 5.1, sẽ có database mới cùng tài khoản seed.
-
 ## 6. Kiểm thử chức năng
 
 ### 6.1. Backend
@@ -340,15 +312,7 @@ Với backend portable đang bật và không đặt hai biến E2E trên, chạ
 
 Tám kịch bản bao gồm đăng ký/tạo phiên/bid/kết quả, làm mới thủ công và xung đột, admin xóa user/phiên, quyền xóa của seller, phiên không bid, độ chính xác tiền/double-click, tìm kiếm/phân trang và giao diện mobile responsive.
 
-### 6.3. Smoke Docker và demo
-
-Tại gốc:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/docker-smoke.ps1
-```
-
-Script build/chạy cả ba service trong project `ktpm-p1-smoke`, dùng cổng frontend 15173/backend 18080/database 15432. Kiểm tra SPA qua `/login`, API qua Nginx, login, GET/POST cần xác thực, tạo/xem/xóa phiên và OpenAPI. Cuối cùng dọn đúng container/volume thử, giữ database chính. Thành công có dòng `PASS`.
+### 6.3. Demo
 
 Backend đang chạy thì có thể thử luồng kết thúc phiên tự động:
 
@@ -363,7 +327,6 @@ powershell -ExecutionPolicy Bypass -File scripts/demo.ps1 -DurationSeconds 20 -W
 | Backend | 29 test đạt; đóng gói JAR thành công |
 | Frontend | 29 test đạt; build production và format check đạt |
 | E2E Docker qua Nginx | 8 kịch bản đạt trên database thử riêng |
-| Docker smoke / Nginx | Đạt; cả ba service và API proxy hoạt động |
 | Bộ tính số đo benchmark | 4 test đạt |
 | Smoke tải local | Read/bid/mixed và CPU/RAM chạy được; không có lỗi ngoài dự kiến |
 
