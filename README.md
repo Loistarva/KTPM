@@ -1,4 +1,4 @@
-# KTPM — Hệ thống đấu giá tay
+# KTPM — Hệ thống đấu giá cơ bản
 
 Dự án đấu giá cơ bản cho Pha 1: backend REST API/JSON, frontend React, PostgreSQL và Docker. Pha 2 dùng cùng bộ kiểm thử tải để đánh giá các cải tiến kiến trúc.
 
