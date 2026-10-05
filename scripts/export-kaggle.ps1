@@ -8,6 +8,7 @@ if(-not $OutputPath.StartsWith($repoRoot+[System.IO.Path]::DirectorySeparatorCha
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $files=@((Join-Path $repoRoot 'backend/pom.xml'),(Join-Path $repoRoot 'backend/mvnw'),(Join-Path $repoRoot 'scripts/benchmark.py'))
+$files+=@('benchmark_suite.py','benchmark_config.json','compare_benchmarks.py') | ForEach-Object { Join-Path $repoRoot ('scripts/'+$_) }
 $files+=Get-ChildItem -LiteralPath (Join-Path $repoRoot 'backend/src'),(Join-Path $repoRoot 'backend/.mvn') -Recurse -File | Select-Object -ExpandProperty FullName
 $archive=[System.IO.Compression.ZipFile]::Open($OutputPath,[System.IO.Compression.ZipArchiveMode]::Create)
 try {

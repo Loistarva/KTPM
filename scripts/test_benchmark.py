@@ -1,13 +1,8 @@
-import contextlib
-import io
 import json
-import tempfile
 import unittest
-from pathlib import Path
-from types import SimpleNamespace
-from unittest.mock import patch
-
+from decimal import Decimal
 import benchmark
+import benchmark_suite as suite
 
 
 class BenchmarkTest(unittest.TestCase):
@@ -24,29 +19,23 @@ class BenchmarkTest(unittest.TestCase):
         meter.start()
         self.assertFalse(meter.finish(1)["available"])
 
-    def test_failed_requests_are_not_successful_throughput(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            fixture = root / "fixture.json"
-            fixture.write_text(json.dumps({"base": "http://localhost", "auctionId": 1,
-                                           "tokens": ["PRIVATE_TOKEN"]}))
-            args = SimpleNamespace(fixture=str(fixture), mode="bid", requests=4,
-                                   concurrency=1, seed=42, timeout=1, phase="test",
-                                   output=str(root / "report.json"),
-                                   samples_output=str(root / "samples.jsonl"),
-                                   server_pid=None, database_pid=None)
-            responses = [(200, {"status": "ACTIVE", "currentPrice": 100,
-                                "minimumBidStep": 10}),
-                         (201, None), (409, None), (401, None), (429, None)]
-            with patch.object(benchmark, "api", side_effect=responses), contextlib.redirect_stdout(io.StringIO()):
-                report = benchmark.run(args)
-            self.assertEqual(report["successfulRequests"], 1)
-            self.assertEqual(report["businessConflictRate"], .25)
-            self.assertEqual(report["unexpectedErrorRate"], .5)
-            self.assertEqual(report["authFailureRate"], .25)
-            self.assertNotIn("PRIVATE_TOKEN", Path(args.output).read_text())
-            self.assertNotIn("PRIVATE_TOKEN", Path(args.samples_output).read_text())
+    def test_error_classification_and_no_tokens_in_results(self):
+        class Client:
+            def call(self, path, method, body, token):
+                return 201, dict(id=3, auctionId=1, bidderId=2, amount=Decimal(101), accessToken=token)
+        fixture=dict(bidders=[dict(id=2,token="PRIVATE_TOKEN")],
+                     auctions=[dict(id=1,endingTime="2099-01-01T00:00:00Z")],
+                     targets=[dict(id=1,endingTime="2099-01-01T00:00:00Z")],bases={"1":Decimal(100)})
+        success=suite.request_job(Client(),dict(kind="bid"),fixture,0)
+        rows=[success]+[dict(operation="bid",status=code,validSuccess=False,acceptable=code==409,latencyMs=1)
+                        for code in (409,401,429)]
+        result=suite.summarize(rows,1)
+        self.assertEqual(result['successfulRequests'],1)
+        self.assertEqual(result['businessConflictRate'],.25)
+        self.assertEqual(result['unexpectedErrorRate'],.5)
+        self.assertEqual(result['authFailureRate'],.25)
+        self.assertNotIn('PRIVATE_TOKEN',json.dumps(rows))
+        self.assertNotIn('PRIVATE_TOKEN',json.dumps(result))
 
 
-if __name__ == "__main__":
-    unittest.main()
+if __name__ == "__main__": unittest.main()

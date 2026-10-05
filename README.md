@@ -1,6 +1,6 @@
 # KTPM — Hệ thống đấu giá tay
 
-Dự án Pha 1: backend REST API/JSON, frontend React, database PostgreSQL và đóng gói Docker.
+Dự án đấu giá cơ bản cho Pha 1: backend REST API/JSON, frontend React, PostgreSQL và Docker. Pha 2 dùng cùng bộ kiểm thử tải để đánh giá các cải tiến kiến trúc.
 
 ## 1. Các tính năng chính
 
@@ -13,6 +13,8 @@ Dự án Pha 1: backend REST API/JSON, frontend React, database PostgreSQL và �
 Bid đầu ít nhất bằng giá khởi điểm; bid sau ít nhất bằng giá hiện tại cộng bước giá. Không bid phiên của mình, khi đang dẫn đầu hoặc ngoài thời gian đấu giá. Giao diện cập nhật bằng thao tác/Làm mới/F5; không có realtime, polling, ví, thanh toán hay auto-bid.
 
 ## 2. Kiến trúc hệ thống
+
+[Sơ đồ kiến trúc tổng quan](docs/KIEN_TRUC.md)
 
 **Backend:** Java 17+, Spring Boot, Spring Security, JPA/Hibernate, PostgreSQL 16.2, Flyway, OpenAPI. **Frontend:** React, TypeScript, Vite, React Router, TanStack Query; decimal.js/lossless-json xử lý số tiền. **Docker:** Nginx/frontend, backend và PostgreSQL.
 
@@ -114,16 +116,38 @@ Nếu lỗi, kiểm tra backend tại http://localhost:8080/actuator/health. Doc
 
 ## 6. Kiểm thử tải trên Kaggle CPU
 
-[Hướng dẫn](docs/KAGGLE_CPU.md) · [Notebook](notebooks/KTPM_Pha1_CPU.ipynb)
+[Hướng dẫn chi tiết](docs/KAGGLE_CPU.md) · [Notebook chung P1/P2](notebooks/KTPM_CPU_Benchmark.ipynb) · [Cấu hình bộ đo](scripts/benchmark_config.json)
 
-Xuất source tại gốc:
+Backend, PostgreSQL và client phát tải chạy trong cùng phiên Kaggle CPU. Mỗi lượt đo tạo database mới, chuẩn bị dữ liệu và warmup trước khi tính kết quả.
+
+| Nhóm | Kịch bản |
+|---|---|
+| Đọc | Danh sách/tìm/lọc/phân trang/chi tiết với 100 và 2.000 phiên; lịch sử 1.000 bid |
+| Bid đồng thời | Nhiều người bid vào một phiên hoặc 32 phiên |
+| Ghi dữ liệu | Tạo phiên, xóa phiên |
+| Xác thực | Đăng nhập, GET thông tin tài khoản bằng JWT |
+| Tải chung | Đọc/ghi hỗn hợp; tải kéo dài 5 phút; tăng mức đồng thời từ 1 đến 100 |
+| Thời gian | Bid qua giờ đóng; scheduler xử lý 100 và 500 phiên cùng lịch |
+
+Bộ **full gồm 15 kịch bản, 108 lượt đo/pha**, mỗi tổ hợp lặp 3 lần. Đo RPS tổng/thành công, p95/p99, lỗi/409, CPU/RAM, độ trễ scheduler và tính đúng của bid/giá/người thắng. HTTP 409 của bid được thống kê riêng, không tính là request thành công.
+
+**Chạy Pha 1:** xuất source tại thư mục gốc:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/export-kaggle.ps1
 ```
 
-Upload `backend/.local/kaggle/ktpm-p1-source.zip` thành dataset Kaggle, import notebook, thêm dataset, chọn **Accelerator: None**, bật Internet. Backend, PostgreSQL và client tải chạy cùng máy Kaggle CPU.
+1. Upload `backend/.local/kaggle/ktpm-p1-source.zip` thành dataset Kaggle.
+2. Import notebook ở trên, thêm dataset, chọn **Accelerator: None**, bật Internet.
+3. Chạy tất cả cell với `PROFILE = 'smoke'` để kiểm tra bộ chạy; sau đó đổi sang `'full'` và chạy lại tất cả cell để đo.
+4. Tải ZIP kết quả trong Output; giữ cùng ZIP source P1 làm mốc so sánh.
 
-Chạy `SMOKE = True` để kiểm tra pipeline, rồi `False` để đo đầy đủ: read/bid/mixed × concurrency 1/10/50 × 3 lần; mỗi trial database mới, 25 bidder, warmup 100 request và đo 1.000 request, seed 42.
+**So sánh Pha 2:** tại source P2 xuất ZIP:
 
-Ghi RPS tổng/thành công, p95/p99, HTTP 409, lỗi, CPU/RAM cùng cấu hình phần cứng và SHA256 source/runner. Tải `results-p1.zip` theo notebook. **Chưa có số đo Kaggle thực tế**; không dùng số đo local thay cho kết quả Kaggle.
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/export-kaggle.ps1 -OutputPath backend/.local/kaggle/ktpm-p2-source.zip
+```
+
+Thêm cả hai ZIP vào notebook, bật dòng `PHASE_ARCHIVES['P2']`, chọn `'full'` và chạy lại tất cả cell. Hai pha dùng runner/config từ P1 và chạy xen kẽ trong **cùng phiên Kaggle**; đo lại cả P1 khi đo P2.
+
+Kết quả tự xuất `comparison.csv` và `comparison.md`: median/min/max qua 3 lần đo và % cải thiện. Bộ so sánh từ chối điều kiện đo khác nhau hoặc thiếu lượt; dữ liệu sai/không xác định và chế độ smoke không được cấp % cải thiện chính thức.
