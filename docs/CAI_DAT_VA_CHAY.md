@@ -2,49 +2,43 @@
 
 ## 1. Tải dự án
 
-Mở [GitHub KTPM](https://github.com/Loistarva/KTPM/) → **Code → Download ZIP** → giải nén. Mở thư mục có `backend`, `frontend`, `scripts` và `docker-compose.yml`.
+Mở [GitHub KTPM](https://github.com/Loistarva/KTPM/) → **Code → Download ZIP** → giải nén.
 
-Mở PowerShell và vào thư mục đó, ví dụ:
+Mở thư mục có `backend`, `frontend`, `scripts`, `docker-compose.yml`. Mở PowerShell và vào thư mục đó:
 
 ```powershell
 cd "C:\Projects\KTPM-main"
 ```
 
-Thay đường dẫn bằng nơi bạn đã giải nén. Chọn **một** trong hai cách dưới đây.
+Thay đường dẫn bằng nơi bạn giải nén. Chọn **một** cách bên dưới.
 
-## 2. Chạy bằng Docker
+## 2. Cách Docker — cài một phần mềm
 
-Cài [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/), mở ứng dụng và đợi engine chạy với Linux containers. Không cần cài riêng Java, Node.js hay PostgreSQL.
-
-Tại thư mục gốc:
+1. Cài [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/), dùng Linux containers. Nếu yêu cầu WSL hoặc khởi động lại, làm theo trình cài.
+2. Mở Docker Desktop, đợi engine chạy; mở lại PowerShell sau khi cài.
+3. Tại thư mục dự án, chạy:
 
 ```powershell
-if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 docker compose up --build -d
 ```
 
-Lần đầu cần Internet để tải image/thư viện. Khi backend sẵn sàng, mở **http://localhost:5173**.
+Đợi tải/build xong rồi mở **http://localhost:5173**. Không cần cài Java, Node.js hay PostgreSQL riêng.
 
-Kiểm tra hoặc xem lỗi:
+Lần sau bật lại: `docker compose up -d`. Khi sửa code: dùng lệnh có `--build`. Tắt: `docker compose down` — dữ liệu vẫn giữ. Không thêm `-v` nếu muốn giữ database.
 
-```powershell
-docker compose ps
-docker compose logs --tail=50 backend frontend
-```
+## 3. Cách thường — cài hai phần mềm
 
-Tắt bằng `docker compose down`; lần sau bật bằng `docker compose up -d`. Không thêm `-v` nếu muốn giữ database.
+1. Cài [Java JDK 21](https://adoptium.net/temurin/releases/), chọn Windows JDK; bật tùy chọn PATH và JAVA_HOME trong trình cài.
+2. Cài [Node.js 24 LTS](https://nodejs.org/en/download), chọn Windows Installer và giữ các tùy chọn mặc định.
+3. Đóng rồi mở lại PowerShell. Không cần cài riêng Maven hay PostgreSQL.
 
-## 3. Chạy trực tiếp, không dùng Docker
-
-Cài **JDK 21** từ [Adoptium](https://adoptium.net/temurin/releases/) (bật PATH/JAVA_HOME) và **Node.js 24 LTS** từ [Node.js](https://nodejs.org/en/download). Mở lại PowerShell sau khi cài. Không cần cài riêng Maven hoặc PostgreSQL.
-
-**Terminal 1**, tại thư mục gốc:
+**Cửa sổ PowerShell thứ nhất**, tại thư mục dự án:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/start-portable.ps1
 ```
 
-Đợi backend khởi động. **Terminal 2**, cũng bắt đầu tại thư mục gốc:
+**Cửa sổ PowerShell thứ hai**, cũng bắt đầu tại thư mục dự án:
 
 ```powershell
 cd frontend
@@ -52,20 +46,20 @@ npm.cmd ci
 npm.cmd run dev
 ```
 
-Mở **http://localhost:5173**. Giữ cả hai terminal mở; bấm **Ctrl+C** ở từng terminal để tắt. Lần sau chạy lại hai lệnh bật, không cần `npm ci` nếu thư viện không đổi.
+Đợi backend/frontend khởi động rồi mở **http://localhost:5173**. Giữ cả hai cửa sổ mở; bấm **Ctrl+C** ở từng cửa sổ để tắt. Lần sau chạy lại, bỏ qua `npm.cmd ci` nếu thư viện không đổi.
 
-## 4. Đăng nhập và sử dụng
+## 4. Đăng nhập
 
 | Tài khoản | Mật khẩu |
 |---|---|
-| admin | Admin123! |
 | seller | Seller123! |
 | bidder1 / bidder2 | Bidder123! |
+| admin | Admin123! |
 
-Đăng nhập seller để tạo phiên; đăng nhập bidder ở tab khác để đặt giá. Bấm **Làm mới/F5** để cập nhật giá.
+Seller tạo phiên; bidder đặt giá. Bấm **Làm mới/F5** để xem giá mới.
 
-Swagger: **http://localhost:8080/swagger-ui/index.html**. Kiểm tra backend: **http://localhost:8080/actuator/health**, kết quả phải là `{"status":"UP"}`.
+Swagger thử API: **http://localhost:8080/swagger-ui/index.html**.
 
-Không bật Docker và bản trực tiếp cùng lúc vì trùng cổng. Hai cách có database riêng; dữ liệu portable ở `backend/.local/postgres`, dữ liệu Docker ở volume. Không xóa chúng nếu muốn giữ lịch sử.
+Lần đầu cần Internet và thời gian tải thư viện. Không bật hai cách cùng lúc vì trùng cổng. Docker và cách thường dùng database riêng.
 
-Nếu repo tải về chưa có cấu trúc trên, người quản lý cần push bản mới lên GitHub. Xem [README](../README.md) để biết chi tiết API và kiểm thử.
+Nếu tải repo không thấy các thư mục trên, đó có thể là bản cũ; người quản lý cần push bản mới. Chi tiết và xử lý lỗi xem [README mục 5](../README.md).
