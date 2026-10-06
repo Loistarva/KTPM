@@ -1,0 +1,5075 @@
+{
+  "audit": {
+    "zipSha256": "3213478c0eaed305dd84b1e309433d9fe9b4bb9249044ce6834cae7311922cad",
+    "session": "60e076a7186a4fbe9b303355deeb1588",
+    "phases": [
+      "P1"
+    ],
+    "trials": 108,
+    "cases": 15,
+    "correctness": {
+      "passed": 108
+    },
+    "harnessHashes": [
+      "da97669a9266c3f9c3313cf3c8d009a75c5bfc21d4da33eee5f4befd183b9f62"
+    ],
+    "sourceHashes": [
+      "5a6978bfb71fbc99e8daccc06495db7110571c2e0b4b5a77f67058db067dec05"
+    ],
+    "rawRequests": 853846,
+    "successfulRequests": 797797,
+    "unexpectedErrors": 0,
+    "bidConflicts": 56049,
+    "consistencyIssues": [],
+    "environment": {
+      "benchmarkSessionId": "60e076a7186a4fbe9b303355deeb1588",
+      "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+      "python": "3.13.15 (main, Aug  6 2026, 11:06:22) [GCC 13.3.0]",
+      "logicalCpus": 4,
+      "affinity": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "memoryBytes": 33658314752,
+      "java": "openjdk version \"21.0.12\" 2026-07-21\nOpenJDK Runtime Environment (build 21.0.12+8-1-24.04-Ubuntu)\nOpenJDK 64-Bit Server VM (build 21.0.12+8-1-24.04-Ubuntu, mixed mode, sharing)\n",
+      "cpu": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           46 bits physical, 48 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Xeon(R) CPU @ 2.20GHz\nCPU family:                              6\nModel:                                   79\nThread(s) per core:                      2\nCore(s) per socket:                      2\nSocket(s):                               1\nStepping:                                0\nBogoMIPS:                                4399.99\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch pti ssbd ibrs ibpb stibp fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm rdseed adx smap xsaveopt arat md_clear arch_capabilities\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               64 KiB (2 instances)\nL1i cache:                               64 KiB (2 instances)\nL2 cache:                                512 KiB (2 instances)\nL3 cache:                                55 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Mitigation; Aligned branch/return thunks\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Mitigation; PTE Inversion\nVulnerability Mds:                       Mitigation; Clear CPU buffers; SMT Host state unknown\nVulnerability Meltdown:                  Mitigation; PTI\nVulnerability Mmio stale data:           Vulnerable: Clear CPU buffers attempted, no microcode; SMT Host state unknown\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Mitigation; IBRS\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; IBRS; IBPB conditional; STIBP conditional; RSB filling; PBRSB-eIBRS Not affected; BHI SW loop, KVM SW loop\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Mitigation; Clear CPU buffers; SMT Host state unknown\nVulnerability Vmscape:                   Not affected\n",
+      "cpuMax": "400000 100000",
+      "memoryMax": "32212254720",
+      "psutil": "5.9.5",
+      "jvmOptions": [
+        "-Xms256m",
+        "-Xmx512m",
+        "-XX:ActiveProcessorCount=2"
+      ],
+      "postgres": "16.2",
+      "topology": "one backend + PostgreSQL + closed-loop client on same Kaggle CPU kernel",
+      "selectedCases": [],
+      "trialMatrix": [
+        {
+          "id": "read_small",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "read_small",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "read_small",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "read_small",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "read_small",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "read_small",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "read_small",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "read_small",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "read_small",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "read_large",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "read_large",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "read_large",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "read_large",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "read_large",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "read_large",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "read_large",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "read_large",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "read_large",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "history_deep",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "bid_hot",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "bid_many",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "create",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "create",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "create",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "create",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "create",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "create",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "create",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "create",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "create",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "delete",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "delete",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "delete",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "delete",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "delete",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "delete",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "delete",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "delete",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "delete",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "login",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "login",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "login",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "login",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "login",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "login",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "login",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "login",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "login",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "authenticated_get",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "mixed",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "mixed",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "mixed",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "mixed",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "mixed",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "mixed",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "mixed",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "mixed",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "mixed",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "deadline",
+          "concurrency": 10,
+          "repeat": 1
+        },
+        {
+          "id": "deadline",
+          "concurrency": 10,
+          "repeat": 2
+        },
+        {
+          "id": "deadline",
+          "concurrency": 10,
+          "repeat": 3
+        },
+        {
+          "id": "deadline",
+          "concurrency": 50,
+          "repeat": 1
+        },
+        {
+          "id": "deadline",
+          "concurrency": 50,
+          "repeat": 2
+        },
+        {
+          "id": "deadline",
+          "concurrency": 50,
+          "repeat": 3
+        },
+        {
+          "id": "scheduler_small",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "scheduler_small",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "scheduler_small",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "scheduler_large",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "scheduler_large",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "scheduler_large",
+          "concurrency": 1,
+          "repeat": 3
+        },
+        {
+          "id": "soak",
+          "concurrency": 25,
+          "repeat": 1
+        },
+        {
+          "id": "soak",
+          "concurrency": 25,
+          "repeat": 2
+        },
+        {
+          "id": "soak",
+          "concurrency": 25,
+          "repeat": 3
+        },
+        {
+          "id": "ramp",
+          "concurrency": 1,
+          "repeat": 1
+        },
+        {
+          "id": "ramp",
+          "concurrency": 1,
+          "repeat": 2
+        },
+        {
+          "id": "ramp",
+          "concurrency": 1,
+          "repeat": 3
+        }
+      ]
+    },
+    "config": {
+      "schemaVersion": 2,
+      "seed": 42,
+      "profiles": {
+        "smoke": {
+          "users": 4,
+          "requests": 24,
+          "warmup": 4,
+          "concurrencies": [
+            1,
+            3
+          ],
+          "repeats": 1
+        },
+        "full": {
+          "users": 50,
+          "requests": 1000,
+          "warmup": 200,
+          "concurrencies": [
+            1,
+            10,
+            50
+          ],
+          "repeats": 3
+        }
+      },
+      "scenarios": [
+        {
+          "id": "read_small",
+          "kind": "catalog",
+          "auctions": {
+            "smoke": 12,
+            "full": 100
+          }
+        },
+        {
+          "id": "read_large",
+          "kind": "catalog",
+          "auctions": {
+            "smoke": 40,
+            "full": 2000
+          }
+        },
+        {
+          "id": "history_deep",
+          "kind": "history",
+          "auctions": {
+            "smoke": 4,
+            "full": 20
+          },
+          "historyRows": {
+            "smoke": 24,
+            "full": 1000
+          }
+        },
+        {
+          "id": "bid_hot",
+          "kind": "bid",
+          "auctions": {
+            "smoke": 1,
+            "full": 1
+          }
+        },
+        {
+          "id": "bid_many",
+          "kind": "bid",
+          "auctions": {
+            "smoke": 8,
+            "full": 32
+          }
+        },
+        {
+          "id": "create",
+          "kind": "create",
+          "auctions": {
+            "smoke": 1,
+            "full": 1
+          }
+        },
+        {
+          "id": "delete",
+          "kind": "delete",
+          "auctions": {
+            "smoke": 1,
+            "full": 1
+          }
+        },
+        {
+          "id": "login",
+          "kind": "login",
+          "auctions": {
+            "smoke": 1,
+            "full": 1
+          }
+        },
+        {
+          "id": "authenticated_get",
+          "kind": "auth",
+          "auctions": {
+            "smoke": 1,
+            "full": 1
+          }
+        },
+        {
+          "id": "mixed",
+          "kind": "mixed",
+          "auctions": {
+            "smoke": 12,
+            "full": 500
+          }
+        },
+        {
+          "id": "deadline",
+          "kind": "deadline",
+          "auctions": {
+            "smoke": 1,
+            "full": 1
+          },
+          "concurrencies": {
+            "smoke": [
+              3
+            ],
+            "full": [
+              10,
+              50
+            ]
+          },
+          "durationSeconds": {
+            "smoke": 8,
+            "full": 24
+          },
+          "endAfterSeconds": {
+            "smoke": 4,
+            "full": 12
+          }
+        },
+        {
+          "id": "scheduler_small",
+          "kind": "scheduler",
+          "auctions": {
+            "smoke": 4,
+            "full": 100
+          },
+          "concurrencies": {
+            "smoke": [
+              1
+            ],
+            "full": [
+              1
+            ]
+          },
+          "startAfterSeconds": {
+            "smoke": 4,
+            "full": 20
+          },
+          "endAfterSeconds": {
+            "smoke": 9,
+            "full": 40
+          },
+          "graceSeconds": {
+            "smoke": 15,
+            "full": 40
+          }
+        },
+        {
+          "id": "scheduler_large",
+          "kind": "scheduler",
+          "auctions": {
+            "smoke": 12,
+            "full": 500
+          },
+          "concurrencies": {
+            "smoke": [
+              1
+            ],
+            "full": [
+              1
+            ]
+          },
+          "startAfterSeconds": {
+            "smoke": 4,
+            "full": 20
+          },
+          "endAfterSeconds": {
+            "smoke": 9,
+            "full": 40
+          },
+          "graceSeconds": {
+            "smoke": 15,
+            "full": 40
+          }
+        },
+        {
+          "id": "soak",
+          "kind": "mixed",
+          "auctions": {
+            "smoke": 8,
+            "full": 100
+          },
+          "concurrencies": {
+            "smoke": [
+              3
+            ],
+            "full": [
+              25
+            ]
+          },
+          "durationSeconds": {
+            "smoke": 6,
+            "full": 300
+          }
+        },
+        {
+          "id": "ramp",
+          "kind": "ramp",
+          "auctions": {
+            "smoke": 8,
+            "full": 100
+          },
+          "concurrencies": {
+            "smoke": [
+              1
+            ],
+            "full": [
+              1
+            ]
+          },
+          "levels": {
+            "smoke": [
+              1,
+              3
+            ],
+            "full": [
+              1,
+              10,
+              25,
+              50,
+              100
+            ]
+          },
+          "stageSeconds": {
+            "smoke": 3,
+            "full": 30
+          }
+        }
+      ]
+    }
+  },
+  "summary": [
+    {
+      "case": "authenticated_get",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 162.56508154452814,
+          "min": 153.74193216668678,
+          "max": 166.97618953867286
+        },
+        "metrics.successfulRps": {
+          "median": 162.56508154452814,
+          "min": 153.74193216668678,
+          "max": 166.97618953867286
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 7.845550000183721,
+          "min": 7.503854999868054,
+          "max": 8.502977000262035
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 9.081526000045415,
+          "min": 9.023735000027955,
+          "max": 10.043259999747534
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 7.845550000183721,
+          "min": 7.503854999868054,
+          "max": 8.502977000262035
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 9.081526000045415,
+          "min": 9.023735000027955,
+          "max": 10.043259999747534
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 11.929999999999996,
+          "min": 10.910000000000007,
+          "max": 12.329999999999997
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 189.40582581513942,
+          "min": 182.00117114300724,
+          "max": 193.7707988365736
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 11.929999999999996,
+          "min": 10.910000000000007,
+          "max": 12.329999999999997
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 777.6484375,
+          "min": 775.33984375,
+          "max": 778.53125
+        }
+      },
+      "operations": {
+        "me": {
+          "successfulRps": {
+            "median": 162.56508154452814,
+            "min": 153.74193216668678,
+            "max": 166.97618953867286
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 7.845550000183721,
+            "min": 7.503854999868054,
+            "max": 8.502977000262035
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 9.081526000045415,
+            "min": 9.023735000027955,
+            "max": 10.043259999747534
+          }
+        }
+      }
+    },
+    {
+      "case": "authenticated_get",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 423.0626413770868,
+          "min": 398.0117289057688,
+          "max": 425.53259158091834
+        },
+        "metrics.successfulRps": {
+          "median": 423.0626413770868,
+          "min": 398.0117289057688,
+          "max": 425.53259158091834
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 36.03340700010449,
+          "min": 34.44853200016951,
+          "max": 38.536859000032564
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 44.77336599984483,
+          "min": 39.80402099978164,
+          "max": 46.05129199990188
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 36.03340700010449,
+          "min": 34.44853200016951,
+          "max": 38.536859000032564
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 44.77336599984483,
+          "min": 39.80402099978164,
+          "max": 46.05129199990188
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 8.09,
+          "min": 7.809999999999994,
+          "max": 8.559999999999997
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 339.6894138100642,
+          "min": 328.8770073529043,
+          "max": 342.58934274614927
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 8.09,
+          "min": 7.809999999999994,
+          "max": 8.559999999999997
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 775.07421875,
+          "min": 773.6328125,
+          "max": 777.8515625
+        }
+      },
+      "operations": {
+        "me": {
+          "successfulRps": {
+            "median": 423.0626413770868,
+            "min": 398.0117289057688,
+            "max": 425.53259158091834
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 36.03340700010449,
+            "min": 34.44853200016951,
+            "max": 38.536859000032564
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 44.77336599984483,
+            "min": 39.80402099978164,
+            "max": 46.05129199990188
+          }
+        }
+      }
+    },
+    {
+      "case": "authenticated_get",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 420.6352625713332,
+          "min": 405.5397909892411,
+          "max": 435.17277609249084
+        },
+        "metrics.successfulRps": {
+          "median": 420.6352625713332,
+          "min": 405.5397909892411,
+          "max": 435.17277609249084
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 215.98308099964925,
+          "min": 205.26423999990584,
+          "max": 220.77144900003987
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 271.05923699991763,
+          "min": 264.60796899982597,
+          "max": 293.39322500027265
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 215.98308099964925,
+          "min": 205.26423999990584,
+          "max": 220.77144900003987
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 271.05923699991763,
+          "min": 264.60796899982597,
+          "max": 293.39322500027265
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 8.069999999999995,
+          "min": 7.800000000000002,
+          "max": 8.439999999999994
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 337.2166218114253,
+          "min": 336.87005607897373,
+          "max": 339.5573610222387
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 8.069999999999995,
+          "min": 7.800000000000002,
+          "max": 8.439999999999994
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 780.3828125,
+          "min": 780.19140625,
+          "max": 782.87890625
+        }
+      },
+      "operations": {
+        "me": {
+          "successfulRps": {
+            "median": 420.6352625713332,
+            "min": 405.5397909892411,
+            "max": 435.17277609249084
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 215.98308099964925,
+            "min": 205.26423999990584,
+            "max": 220.77144900003987
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 271.05923699991763,
+            "min": 264.60796899982597,
+            "max": 293.39322500027265
+          }
+        }
+      }
+    },
+    {
+      "case": "bid_hot",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 89.70616096695441,
+          "min": 82.15560601370942,
+          "max": 89.95819340312954
+        },
+        "metrics.successfulRps": {
+          "median": 89.70616096695441,
+          "min": 82.15560601370942,
+          "max": 89.95819340312954
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 14.726725999935297,
+          "min": 14.237213000114934,
+          "max": 15.366555999889897
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 15.98053899988372,
+          "min": 15.794842000104836,
+          "max": 17.575166999904468
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 14.726725999935297,
+          "min": 14.237213000114934,
+          "max": 15.366555999889897
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 15.98053899988372,
+          "min": 15.794842000104836,
+          "max": 17.575166999904468
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 21.069999999999993,
+          "min": 20.77,
+          "max": 22.23
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 186.69231515263598,
+          "min": 182.54272747382996,
+          "max": 188.85610213701753
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 21.069999999999993,
+          "min": 20.77,
+          "max": 22.23
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 812.25390625,
+          "min": 810.2578125,
+          "max": 818.84765625
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 89.70616096695441,
+            "min": 82.15560601370942,
+            "max": 89.95819340312954
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 14.726725999935297,
+            "min": 14.237213000114934,
+            "max": 15.366555999889897
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 15.98053899988372,
+            "min": 15.794842000104836,
+            "max": 17.575166999904468
+          }
+        }
+      }
+    },
+    {
+      "case": "bid_hot",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 212.77899835471274,
+          "min": 208.00642021633962,
+          "max": 213.90116396487554
+        },
+        "metrics.successfulRps": {
+          "median": 86.53067080999728,
+          "min": 85.1115993418851,
+          "max": 88.12727955352872
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 78.77160999987609,
+          "min": 78.33280500017281,
+          "max": 80.3228519998811
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 107.60037299996839,
+          "min": 107.15437699991526,
+          "max": 122.48971700000766
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 60.133288000088214,
+          "min": 56.6046109997842,
+          "max": 60.21968200002448
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 65.9335299999384,
+          "min": 65.47506400011116,
+          "max": 72.01796999993348
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.588,
+          "min": 0.584,
+          "max": 0.6
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 15.719999999999995,
+          "min": 15.709999999999997,
+          "max": 15.990000000000006
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 333.9999077709791,
+          "min": 332.05031728033543,
+          "max": 335.5354687758441
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 38.437500000000014,
+          "min": 38.131067961165044,
+          "max": 39.29999999999998
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 826.4453125,
+          "min": 819.59765625,
+          "max": 830.26171875
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 86.53067080999728,
+            "min": 85.1115993418851,
+            "max": 88.12727955352872
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 60.133288000088214,
+            "min": 56.6046109997842,
+            "max": 60.21968200002448
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 65.9335299999384,
+            "min": 65.47506400011116,
+            "max": 72.01796999993348
+          }
+        }
+      }
+    },
+    {
+      "case": "bid_hot",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 249.44580737226775,
+          "min": 245.77109232749044,
+          "max": 258.9944057669366
+        },
+        "metrics.successfulRps": {
+          "median": 29.93349688467213,
+          "min": 27.52636234067893,
+          "max": 32.374300720867076
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 369.21112599998196,
+          "min": 365.7496240000455,
+          "max": 381.6365789998599
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 462.4656320002032,
+          "min": 457.2905590000573,
+          "max": 466.0479699998632
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 135.20805799998925,
+          "min": 127.03760299996247,
+          "max": 147.50795500003733
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 165.7726100002037,
+          "min": 140.46211000004405,
+          "max": 175.43754400003309
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.88,
+          "min": 0.875,
+          "max": 0.888
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 13.449999999999996,
+          "min": 12.98,
+          "max": 13.609999999999996
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 334.06664231613917,
+          "min": 333.51458074176855,
+          "max": 334.99973177310403
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 112.0833333333333,
+          "min": 103.84,
+          "max": 121.51785714285711
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 834.578125,
+          "min": 824.29296875,
+          "max": 835.88671875
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 29.93349688467213,
+            "min": 27.52636234067893,
+            "max": 32.374300720867076
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 135.20805799998925,
+            "min": 127.03760299996247,
+            "max": 147.50795500003733
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 165.7726100002037,
+            "min": 140.46211000004405,
+            "max": 175.43754400003309
+          }
+        }
+      }
+    },
+    {
+      "case": "bid_many",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 92.05369012402974,
+          "min": 92.05157732024084,
+          "max": 92.5889787847394
+        },
+        "metrics.successfulRps": {
+          "median": 92.05369012402974,
+          "min": 92.05157732024084,
+          "max": 92.5889787847394
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 13.868682000065746,
+          "min": 13.65066400012438,
+          "max": 14.070403000005172
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 16.01795999999922,
+          "min": 15.052486000058707,
+          "max": 16.14082400010375
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 13.868682000065746,
+          "min": 13.65066400012438,
+          "max": 14.070403000005172
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 16.01795999999922,
+          "min": 15.052486000058707,
+          "max": 16.14082400010375
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 20.57,
+          "min": 20.320000000000004,
+          "max": 21.110000000000003
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 189.2537032773399,
+          "min": 188.04285132489358,
+          "max": 194.21801253675358
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 20.57,
+          "min": 20.320000000000004,
+          "max": 21.110000000000003
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 816.140625,
+          "min": 815.25,
+          "max": 817.44921875
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 92.05369012402974,
+            "min": 92.05157732024084,
+            "max": 92.5889787847394
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 13.868682000065746,
+            "min": 13.65066400012438,
+            "max": 14.070403000005172
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 16.01795999999922,
+            "min": 15.052486000058707,
+            "max": 16.14082400010375
+          }
+        }
+      }
+    },
+    {
+      "case": "bid_many",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 263.1553636669899,
+          "min": 247.3496403177841,
+          "max": 263.2265866932615
+        },
+        "metrics.successfulRps": {
+          "median": 263.1553636669899,
+          "min": 247.3496403177841,
+          "max": 263.2265866932615
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 55.425087999992684,
+          "min": 52.52852299963706,
+          "max": 59.18134800003827
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 63.56710199997906,
+          "min": 62.10077600007935,
+          "max": 71.41773800003648
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 55.425087999992684,
+          "min": 52.52852299963706,
+          "max": 59.18134800003827
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 63.56710199997906,
+          "min": 62.10077600007935,
+          "max": 71.41773800003648
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 13.689999999999996,
+          "min": 13.5,
+          "max": 14.479999999999995
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 357.26502673149946,
+          "min": 354.6284940240479,
+          "max": 359.15414631594837
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 13.689999999999996,
+          "min": 13.5,
+          "max": 14.479999999999995
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 827.1640625,
+          "min": 824.74609375,
+          "max": 828.76953125
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 263.1553636669899,
+            "min": 247.3496403177841,
+            "max": 263.2265866932615
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 55.425087999992684,
+            "min": 52.52852299963706,
+            "max": 59.18134800003827
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 63.56710199997906,
+            "min": 62.10077600007935,
+            "max": 71.41773800003648
+          }
+        }
+      }
+    },
+    {
+      "case": "bid_many",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 258.5211458650962,
+          "min": 256.87924018036364,
+          "max": 265.70582671193523
+        },
+        "metrics.successfulRps": {
+          "median": 211.9253731488,
+          "min": 209.14360700486282,
+          "max": 216.28454294351528
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 361.19355099981476,
+          "min": 344.8207790002016,
+          "max": 365.9821880000891
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 442.5694969995675,
+          "min": 434.9307120000958,
+          "max": 450.07773999986966
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 288.18127300019114,
+          "min": 288.05892299988045,
+          "max": 298.42962500015346
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 355.1645659999849,
+          "min": 344.6939270002076,
+          "max": 359.84375899988663
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.186,
+          "min": 0.175,
+          "max": 0.191
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 13.840000000000005,
+          "min": 13.590000000000007,
+          "max": 14.070000000000002
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 359.3597101239099,
+          "min": 356.0821141430306,
+          "max": 359.6837300485414
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 17.05454545454546,
+          "min": 16.695331695331703,
+          "max": 17.10754017305316
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 832.66796875,
+          "min": 831.2890625,
+          "max": 832.74609375
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 211.9253731488,
+            "min": 209.14360700486282,
+            "max": 216.28454294351528
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 288.18127300019114,
+            "min": 288.05892299988045,
+            "max": 298.42962500015346
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 355.1645659999849,
+            "min": 344.6939270002076,
+            "max": 359.84375899988663
+          }
+        }
+      }
+    },
+    {
+      "case": "create",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 113.48124945644172,
+          "min": 105.89813394089582,
+          "max": 113.57988909542229
+        },
+        "metrics.successfulRps": {
+          "median": 113.48124945644172,
+          "min": 105.89813394089582,
+          "max": 113.57988909542229
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 11.562567000055424,
+          "min": 11.13422000025821,
+          "max": 11.719415000243316
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 13.115759000356775,
+          "min": 12.675473999934184,
+          "max": 13.331579999885435
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 11.562567000055424,
+          "min": 11.13422000025821,
+          "max": 11.719415000243316
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 13.115759000356775,
+          "min": 12.675473999934184,
+          "max": 13.331579999885435
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 17.059999999999995,
+          "min": 16.829999999999995,
+          "max": 17.070000000000007
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 191.0342528615141,
+          "min": 180.6622437441384,
+          "max": 193.48280106617784
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 17.059999999999995,
+          "min": 16.829999999999995,
+          "max": 17.070000000000007
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 807.76171875,
+          "min": 804.30859375,
+          "max": 810.21875
+        }
+      },
+      "operations": {
+        "create": {
+          "successfulRps": {
+            "median": 113.48124945644172,
+            "min": 105.89813394089582,
+            "max": 113.57988909542229
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 11.562567000055424,
+            "min": 11.13422000025821,
+            "max": 11.719415000243316
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 13.115759000356775,
+            "min": 12.675473999934184,
+            "max": 13.331579999885435
+          }
+        }
+      }
+    },
+    {
+      "case": "create",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 302.80575100250473,
+          "min": 299.5764567384211,
+          "max": 311.8126797873281
+        },
+        "metrics.successfulRps": {
+          "median": 302.80575100250473,
+          "min": 299.5764567384211,
+          "max": 311.8126797873281
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 46.546093999950244,
+          "min": 45.701322999775584,
+          "max": 46.94774400013557
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 54.97658500007674,
+          "min": 53.56518899998264,
+          "max": 55.37419399979626
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 46.546093999950244,
+          "min": 45.701322999775584,
+          "max": 46.94774400013557
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 54.97658500007674,
+          "min": 53.56518899998264,
+          "max": 55.37419399979626
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 11.7,
+          "min": 11.41,
+          "max": 11.920000000000002
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 354.47840943789015,
+          "min": 353.47266041526666,
+          "max": 355.9033005226732
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 11.7,
+          "min": 11.41,
+          "max": 11.920000000000002
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 807.7890625,
+          "min": 806.73828125,
+          "max": 808.24609375
+        }
+      },
+      "operations": {
+        "create": {
+          "successfulRps": {
+            "median": 302.80575100250473,
+            "min": 299.5764567384211,
+            "max": 311.8126797873281
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 46.546093999950244,
+            "min": 45.701322999775584,
+            "max": 46.94774400013557
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 54.97658500007674,
+            "min": 53.56518899998264,
+            "max": 55.37419399979626
+          }
+        }
+      }
+    },
+    {
+      "case": "create",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 314.35191866795265,
+          "min": 302.4434203714589,
+          "max": 314.8057627383422
+        },
+        "metrics.successfulRps": {
+          "median": 314.35191866795265,
+          "min": 302.4434203714589,
+          "max": 314.8057627383422
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 285.6539590002285,
+          "min": 281.0316770001009,
+          "max": 288.0953510002655
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 353.97037500024453,
+          "min": 349.26183400011723,
+          "max": 356.53191399978823
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 285.6539590002285,
+          "min": 281.0316770001009,
+          "max": 288.0953510002655
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 353.97037500024453,
+          "min": 349.26183400011723,
+          "max": 356.53191399978823
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 11.279999999999994,
+          "min": 11.030000000000008,
+          "max": 11.729999999999997
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 352.7502191435195,
+          "min": 344.66743292351845,
+          "max": 352.99615595322797
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 11.279999999999994,
+          "min": 11.030000000000008,
+          "max": 11.729999999999997
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 810.9296875,
+          "min": 808.921875,
+          "max": 811.546875
+        }
+      },
+      "operations": {
+        "create": {
+          "successfulRps": {
+            "median": 314.35191866795265,
+            "min": 302.4434203714589,
+            "max": 314.8057627383422
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 285.6539590002285,
+            "min": 281.0316770001009,
+            "max": 288.0953510002655
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 353.97037500024453,
+            "min": 349.26183400011723,
+            "max": 356.53191399978823
+          }
+        }
+      }
+    },
+    {
+      "case": "deadline",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 312.5295799175093,
+          "min": 304.1660467737214,
+          "max": 316.4118239653102
+        },
+        "metrics.successfulRps": {
+          "median": 35.063278652970396,
+          "min": 34.39802139975602,
+          "max": 37.65111684012655
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 64.18870899960893,
+          "min": 63.64787599977717,
+          "max": 64.54047199986235
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 99.57433199997467,
+          "min": 96.34627200011892,
+          "max": 100.6179610003528
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 65.6176359998426,
+          "min": 62.76496800001041,
+          "max": 67.85186699926271
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 82.66777399967395,
+          "min": 78.30682900021202,
+          "max": 84.63327899971773
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.8878081279147235,
+          "min": 0.8762152540052034,
+          "max": 0.8912871808370624
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 78.80999999999999,
+          "min": 78.74,
+          "max": 78.91
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 327.5363540696271,
+          "min": 327.3337093243351,
+          "max": 327.9454145243294
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 93.59857482185271,
+          "min": 87.10176991150442,
+          "max": 95.53268765133171
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 842.97265625,
+          "min": 840.046875,
+          "max": 845.0234375
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 35.063278652970396,
+            "min": 34.39802139975602,
+            "max": 37.65111684012655
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 65.6176359998426,
+            "min": 62.76496800001041,
+            "max": 67.85186699926271
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 82.66777399967395,
+            "min": 78.30682900021202,
+            "max": 84.63327899971773
+          }
+        }
+      }
+    },
+    {
+      "case": "deadline",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 342.9830903500413,
+          "min": 332.0365297911147,
+          "max": 357.7586746273023
+        },
+        "metrics.successfulRps": {
+          "median": 12.588651540131528,
+          "min": 12.255330868854431,
+          "max": 13.490670356558605
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 305.46502900051564,
+          "min": 293.8851609997073,
+          "max": 316.4073849993656
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 442.8704600004494,
+          "min": 441.30909700015764,
+          "max": 472.0631400005004
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 145.9775029998127,
+          "min": 116.78215000029013,
+          "max": 146.80421600041882
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 186.30073400072433,
+          "min": 153.0513850002535,
+          "max": 214.10346399989066
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.9642684108527132,
+          "min": 0.959369921240155,
+          "max": 0.9648124491928928
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 79.47,
+          "min": 79.21999999999998,
+          "max": 79.58999999999999
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 329.0258540271672,
+          "min": 328.26416535556166,
+          "max": 329.66809778140856
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 261.4521452145214,
+          "min": 244.52307692307693,
+          "max": 269.7966101694915
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 849.2109375,
+          "min": 848.35546875,
+          "max": 859.703125
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 12.588651540131528,
+            "min": 12.255330868854431,
+            "max": 13.490670356558605
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 145.9775029998127,
+            "min": 116.78215000029013,
+            "max": 146.80421600041882
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 186.30073400072433,
+            "min": 153.0513850002535,
+            "max": 214.10346399989066
+          }
+        }
+      }
+    },
+    {
+      "case": "delete",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 135.28652724922077,
+          "min": 130.00500734696087,
+          "max": 135.59908366174605
+        },
+        "metrics.successfulRps": {
+          "median": 135.28652724922077,
+          "min": 130.00500734696087,
+          "max": 135.59908366174605
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 8.875653000359307,
+          "min": 8.635871000024054,
+          "max": 9.239324000191118
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 9.8403669999243,
+          "min": 9.667504999924859,
+          "max": 10.02226700029496
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 8.875653000359307,
+          "min": 8.635871000024054,
+          "max": 9.239324000191118
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 9.8403669999243,
+          "min": 9.667504999924859,
+          "max": 10.02226700029496
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 14.989999999999995,
+          "min": 14.949999999999998,
+          "max": 15.63
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 203.03546225827876,
+          "min": 201.9959467296156,
+          "max": 203.11698000429053
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 14.989999999999995,
+          "min": 14.949999999999998,
+          "max": 15.63
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 818.4296875,
+          "min": 816.38671875,
+          "max": 821.15234375
+        }
+      },
+      "operations": {
+        "delete": {
+          "successfulRps": {
+            "median": 135.28652724922077,
+            "min": 130.00500734696087,
+            "max": 135.59908366174605
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 8.875653000359307,
+            "min": 8.635871000024054,
+            "max": 9.239324000191118
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 9.8403669999243,
+            "min": 9.667504999924859,
+            "max": 10.02226700029496
+          }
+        }
+      }
+    },
+    {
+      "case": "delete",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 408.71508138006504,
+          "min": 396.58150738180535,
+          "max": 409.5107046196683
+        },
+        "metrics.successfulRps": {
+          "median": 408.71508138006504,
+          "min": 396.58150738180535,
+          "max": 409.5107046196683
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 37.75157300015053,
+          "min": 37.64096399982009,
+          "max": 39.66675099991335
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 53.77242899976409,
+          "min": 46.330689000114944,
+          "max": 57.6315519997479
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 37.75157300015053,
+          "min": 37.64096399982009,
+          "max": 39.66675099991335
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 53.77242899976409,
+          "min": 46.330689000114944,
+          "max": 57.6315519997479
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 8.370000000000017,
+          "min": 8.340000000000014,
+          "max": 8.849999999999998
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 340.5412864853181,
+          "min": 340.09460825216144,
+          "max": 349.36893849852083
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 8.370000000000017,
+          "min": 8.340000000000014,
+          "max": 8.849999999999998
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 820.84375,
+          "min": 820.6796875,
+          "max": 826.51171875
+        }
+      },
+      "operations": {
+        "delete": {
+          "successfulRps": {
+            "median": 408.71508138006504,
+            "min": 396.58150738180535,
+            "max": 409.5107046196683
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 37.75157300015053,
+            "min": 37.64096399982009,
+            "max": 39.66675099991335
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 53.77242899976409,
+            "min": 46.330689000114944,
+            "max": 57.6315519997479
+          }
+        }
+      }
+    },
+    {
+      "case": "delete",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 422.1268496772335,
+          "min": 415.0287346679994,
+          "max": 443.1233839393334
+        },
+        "metrics.successfulRps": {
+          "median": 422.1268496772335,
+          "min": 415.0287346679994,
+          "max": 443.1233839393334
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 217.20398599973123,
+          "min": 201.93418100006966,
+          "max": 226.7564650001077
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 290.44304799981546,
+          "min": 253.7505689997488,
+          "max": 293.8200280000274
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 217.20398599973123,
+          "min": 201.93418100006966,
+          "max": 226.7564650001077
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 290.44304799981546,
+          "min": 253.7505689997488,
+          "max": 293.8200280000274
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 8.110000000000003,
+          "min": 7.7100000000000035,
+          "max": 8.310000000000006
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 339.6681127832055,
+          "min": 338.68034124873026,
+          "max": 342.1421909595849
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 8.110000000000003,
+          "min": 7.7100000000000035,
+          "max": 8.310000000000006
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 828.78515625,
+          "min": 825.6015625,
+          "max": 839.12890625
+        }
+      },
+      "operations": {
+        "delete": {
+          "successfulRps": {
+            "median": 422.1268496772335,
+            "min": 415.0287346679994,
+            "max": 443.1233839393334
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 217.20398599973123,
+            "min": 201.93418100006966,
+            "max": 226.7564650001077
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 290.44304799981546,
+            "min": 253.7505689997488,
+            "max": 293.8200280000274
+          }
+        }
+      }
+    },
+    {
+      "case": "history_deep",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 118.26306919578084,
+          "min": 116.39400650745333,
+          "max": 119.1297245301571
+        },
+        "metrics.successfulRps": {
+          "median": 118.26306919578084,
+          "min": 116.39400650745333,
+          "max": 119.1297245301571
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 10.126820000095904,
+          "min": 10.115264999967621,
+          "max": 10.320121000177096
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 11.322130000053221,
+          "min": 10.734943999977986,
+          "max": 11.47312500006592
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 10.126820000095904,
+          "min": 10.115264999967621,
+          "max": 10.320121000177096
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 11.322130000053221,
+          "min": 10.734943999977986,
+          "max": 11.47312500006592
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 15.170000000000007,
+          "min": 14.039999999999997,
+          "max": 15.620000000000001
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 179.2818062009026,
+          "min": 167.12670727131794,
+          "max": 181.69026377245643
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 15.170000000000007,
+          "min": 14.039999999999997,
+          "max": 15.620000000000001
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 832.4140625,
+          "min": 827.6796875,
+          "max": 833.515625
+        }
+      },
+      "operations": {
+        "history": {
+          "successfulRps": {
+            "median": 118.26306919578084,
+            "min": 116.39400650745333,
+            "max": 119.1297245301571
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 10.126820000095904,
+            "min": 10.115264999967621,
+            "max": 10.320121000177096
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 11.322130000053221,
+            "min": 10.734943999977986,
+            "max": 11.47312500006592
+          }
+        }
+      }
+    },
+    {
+      "case": "history_deep",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 341.3256230951573,
+          "min": 331.3361921755361,
+          "max": 352.7547350104872
+        },
+        "metrics.successfulRps": {
+          "median": 341.3256230951573,
+          "min": 331.3361921755361,
+          "max": 352.7547350104872
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 44.48546100002204,
+          "min": 43.24989700012338,
+          "max": 44.89569899988055
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 65.05391799987592,
+          "min": 63.44257799992192,
+          "max": 73.13662699993984
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 44.48546100002204,
+          "min": 43.24989700012338,
+          "max": 44.89569899988055
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 65.05391799987592,
+          "min": 63.44257799992192,
+          "max": 73.13662699993984
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 10.140000000000004,
+          "min": 9.540000000000001,
+          "max": 10.350000000000014
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 342.0486105327347,
+          "min": 335.71834732313414,
+          "max": 344.6990919599897
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 10.140000000000004,
+          "min": 9.540000000000003,
+          "max": 10.350000000000014
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 829.265625,
+          "min": 826.90625,
+          "max": 831.6484375
+        }
+      },
+      "operations": {
+        "history": {
+          "successfulRps": {
+            "median": 341.3256230951573,
+            "min": 331.3361921755361,
+            "max": 352.7547350104872
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 44.48546100002204,
+            "min": 43.24989700012338,
+            "max": 44.89569899988055
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 65.05391799987592,
+            "min": 63.44257799992192,
+            "max": 73.13662699993984
+          }
+        }
+      }
+    },
+    {
+      "case": "history_deep",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 365.66156893364024,
+          "min": 357.8688623808895,
+          "max": 369.8547416287992
+        },
+        "metrics.successfulRps": {
+          "median": 365.66156893364024,
+          "min": 357.8688623808895,
+          "max": 369.8547416287992
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 263.6250509999627,
+          "min": 261.8781050000507,
+          "max": 270.80330300009336
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 355.3602250001404,
+          "min": 353.80096699987007,
+          "max": 360.9952770000291
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 263.6250509999627,
+          "min": 261.8781050000507,
+          "max": 270.80330300009336
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 355.3602250001404,
+          "min": 353.80096699987007,
+          "max": 360.9952770000291
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 9.470000000000002,
+          "min": 9.100000000000017,
+          "max": 9.470000000000002
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 336.97158697282504,
+          "min": 334.57265158931324,
+          "max": 344.15168898165706
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 9.470000000000002,
+          "min": 9.100000000000017,
+          "max": 9.470000000000002
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 836.13671875,
+          "min": 833.6015625,
+          "max": 837.12890625
+        }
+      },
+      "operations": {
+        "history": {
+          "successfulRps": {
+            "median": 365.66156893364024,
+            "min": 357.8688623808895,
+            "max": 369.8547416287992
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 263.6250509999627,
+            "min": 261.8781050000507,
+            "max": 270.80330300009336
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 355.3602250001404,
+            "min": 353.80096699987007,
+            "max": 360.9952770000291
+          }
+        }
+      }
+    },
+    {
+      "case": "login",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 10.668925342232063,
+          "min": 10.622564440360085,
+          "max": 10.893168691724243
+        },
+        "metrics.successfulRps": {
+          "median": 10.668925342232063,
+          "min": 10.622564440360085,
+          "max": 10.893168691724243
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 96.23570300027495,
+          "min": 94.60613200008083,
+          "max": 97.15488300025754
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 107.32989899997847,
+          "min": 98.73804900007599,
+          "max": 109.34430399993289
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 96.23570300027495,
+          "min": 94.60613200008083,
+          "max": 97.15488300025754
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 107.32989899997847,
+          "min": 98.73804900007599,
+          "max": 109.34430399993289
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 100.94,
+          "min": 98.25000000000001,
+          "max": 101.05999999999999
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 107.34520541000822,
+          "min": 107.01874084289615,
+          "max": 107.68567631690847
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 100.94,
+          "min": 98.25000000000001,
+          "max": 101.05999999999999
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 783.42578125,
+          "min": 780.94140625,
+          "max": 786.87890625
+        }
+      },
+      "operations": {
+        "login": {
+          "successfulRps": {
+            "median": 10.668925342232063,
+            "min": 10.622564440360085,
+            "max": 10.893168691724243
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 96.23570300027495,
+            "min": 94.60613200008083,
+            "max": 97.15488300025754
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 107.32989899997847,
+            "min": 98.73804900007599,
+            "max": 109.34430399993289
+          }
+        }
+      }
+    },
+    {
+      "case": "login",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 31.244973572281168,
+          "min": 30.954501359456103,
+          "max": 31.264790267260445
+        },
+        "metrics.successfulRps": {
+          "median": 31.244973572281168,
+          "min": 30.954501359456103,
+          "max": 31.264790267260445
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 382.75818400006756,
+          "min": 382.1292589996119,
+          "max": 387.0501979999972
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 419.2944900000839,
+          "min": 413.84676699999545,
+          "max": 419.74398899992593
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 382.75818400006756,
+          "min": 382.1292589996119,
+          "max": 387.0501979999972
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 419.2944900000839,
+          "min": 413.84676699999545,
+          "max": 419.74398899992593
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 124.46000000000001,
+          "min": 124.40999999999998,
+          "max": 125.66999999999999
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 388.87022665527775,
+          "min": 388.776922422892,
+          "max": 388.9111842404246
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 124.46000000000001,
+          "min": 124.40999999999998,
+          "max": 125.66999999999999
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 785.921875,
+          "min": 782.18359375,
+          "max": 788.84765625
+        }
+      },
+      "operations": {
+        "login": {
+          "successfulRps": {
+            "median": 31.244973572281168,
+            "min": 30.954501359456103,
+            "max": 31.264790267260445
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 382.75818400006756,
+            "min": 382.1292589996119,
+            "max": 387.0501979999972
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 419.2944900000839,
+            "min": 413.84676699999545,
+            "max": 419.74398899992593
+          }
+        }
+      }
+    },
+    {
+      "case": "login",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 30.970584339466978,
+          "min": 30.888085465727826,
+          "max": 31.275929660361385
+        },
+        "metrics.successfulRps": {
+          "median": 30.970584339466978,
+          "min": 30.888085465727826,
+          "max": 31.275929660361385
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 2783.3231859999614,
+          "min": 2758.899611999823,
+          "max": 2797.8016720003325
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 2943.393620000279,
+          "min": 2936.342235000211,
+          "max": 2961.288964000232
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 2783.3231859999614,
+          "min": 2758.899611999823,
+          "max": 2797.8016720003325
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 2943.393620000279,
+          "min": 2936.342235000211,
+          "max": 2961.288964000232
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 125.63000000000002,
+          "min": 124.25000000000001,
+          "max": 125.84
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 388.5061257732094,
+          "min": 388.43694178981286,
+          "max": 388.8565943035068
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 125.63000000000002,
+          "min": 124.25000000000001,
+          "max": 125.84
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 793.2109375,
+          "min": 792.2109375,
+          "max": 794.35546875
+        }
+      },
+      "operations": {
+        "login": {
+          "successfulRps": {
+            "median": 30.970584339466978,
+            "min": 30.888085465727826,
+            "max": 31.275929660361385
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 2783.3231859999614,
+            "min": 2758.899611999823,
+            "max": 2797.8016720003325
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 2943.393620000279,
+            "min": 2936.342235000211,
+            "max": 2961.288964000232
+          }
+        }
+      }
+    },
+    {
+      "case": "mixed",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 111.94773281437269,
+          "min": 110.00181551286299,
+          "max": 113.01285485410123
+        },
+        "metrics.successfulRps": {
+          "median": 111.94773281437269,
+          "min": 110.00181551286299,
+          "max": 113.01285485410123
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 13.701993999802653,
+          "min": 13.107926999964548,
+          "max": 13.829076000092755
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 15.853786999741715,
+          "min": 15.740838000056101,
+          "max": 16.448327000034624
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 13.701993999802653,
+          "min": 13.107926999964548,
+          "max": 13.829076000092755
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 15.853786999741715,
+          "min": 15.740838000056101,
+          "max": 16.448327000034624
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 18.579999999999995,
+          "min": 18.41000000000001,
+          "max": 18.839999999999996
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 207.8035681427955,
+          "min": 207.09637914774038,
+          "max": 207.90865994399547
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 18.579999999999995,
+          "min": 18.41000000000001,
+          "max": 18.839999999999996
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 825.52734375,
+          "min": 819.73046875,
+          "max": 832.8203125
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 25.52408308167697,
+            "min": 25.080413936932764,
+            "max": 25.76693090673508
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 15.143248999720527,
+            "min": 15.083164999850851,
+            "max": 15.941607000058866
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 17.513278000024002,
+            "min": 17.26438599962421,
+            "max": 19.89060599998993
+          }
+        },
+        "create": {
+          "successfulRps": {
+            "median": 9.739452754850424,
+            "min": 9.57015794961908,
+            "max": 9.832118372306807
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 10.917630999756511,
+            "min": 9.773866999694292,
+            "max": 11.187933999735833
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 16.39055500027098,
+            "min": 10.257579000153783,
+            "max": 31.83053500015376
+          }
+        },
+        "detail": {
+          "successfulRps": {
+            "median": 22.389546562874536,
+            "min": 22.0003631025726,
+            "max": 22.602570970820246
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 6.934001999979955,
+            "min": 6.850979999853735,
+            "max": 7.048939000014798
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 8.23758899969107,
+            "min": 7.584476999909384,
+            "max": 8.797864000371192
+          }
+        },
+        "history": {
+          "successfulRps": {
+            "median": 12.762041540838485,
+            "min": 12.540206968466382,
+            "max": 12.88346545336754
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 9.805209999740327,
+            "min": 9.725877000164473,
+            "max": 10.506263000024774
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 11.039967000215256,
+            "min": 10.181139999986044,
+            "max": 11.812552999799664
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 29.890044661437507,
+            "min": 29.37048474193442,
+            "max": 30.17443224604503
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 11.625488999925437,
+            "min": 11.330606000228727,
+            "max": 11.719061999883706
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 12.77060199981861,
+            "min": 12.42541000010533,
+            "max": 14.36698499992417
+          }
+        },
+        "my_auctions": {
+          "successfulRps": {
+            "median": 5.709334373533006,
+            "min": 5.610092591156013,
+            "max": 5.763655597559163
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 13.106717000027857,
+            "min": 12.622481000107655,
+            "max": 13.82405199956338
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 13.954323999769258,
+            "min": 13.773516999663116,
+            "max": 47.41687300020203
+          }
+        },
+        "my_bids": {
+          "successfulRps": {
+            "median": 5.933229839161752,
+            "min": 5.830096222181739,
+            "max": 5.989681307267365
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 9.32188699971448,
+            "min": 9.062862000064342,
+            "max": 10.451122000176838
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 11.156002000006993,
+            "min": 10.948918999929447,
+            "max": 14.392553000107
+          }
+        }
+      }
+    },
+    {
+      "case": "mixed",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 276.81120380282067,
+          "min": 265.94544524224756,
+          "max": 285.38499749646854
+        },
+        "metrics.successfulRps": {
+          "median": 276.81120380282067,
+          "min": 265.94544524224756,
+          "max": 285.38499749646854
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 57.634585999949195,
+          "min": 56.1860150000939,
+          "max": 62.041390000104
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 76.99278100017182,
+          "min": 72.11534999987634,
+          "max": 78.40013299983184
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 57.634585999949195,
+          "min": 56.1860150000939,
+          "max": 62.041390000104
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 76.99278100017182,
+          "min": 72.11534999987634,
+          "max": 78.40013299983184
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 12.559999999999997,
+          "min": 12.369999999999992,
+          "max": 13.079999999999995
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 347.031583592997,
+          "min": 346.34843590716963,
+          "max": 352.1758473257785
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 12.559999999999997,
+          "min": 12.369999999999992,
+          "max": 13.079999999999995
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 831.5,
+          "min": 826.3828125,
+          "max": 840.0703125
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 63.11295446704311,
+            "min": 60.635561515232446,
+            "max": 65.06777942919483
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 71.71260399991297,
+            "min": 64.60222599980625,
+            "max": 72.12148200005686
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 92.27577699994072,
+            "min": 83.5395190001691,
+            "max": 93.8242900001569
+          }
+        },
+        "create": {
+          "successfulRps": {
+            "median": 24.082574730845398,
+            "min": 23.13725373607554,
+            "max": 24.828494782192763
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 45.63330799965115,
+            "min": 44.61299000013241,
+            "max": 51.037684999755584
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 71.06360400030098,
+            "min": 62.93189899997742,
+            "max": 76.10022800008664
+          }
+        },
+        "detail": {
+          "successfulRps": {
+            "median": 55.362240760564134,
+            "min": 53.18908904844952,
+            "max": 57.076999499293706
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 41.08395599996584,
+            "min": 33.34705399993254,
+            "max": 41.470825000033074
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 52.18069500006095,
+            "min": 41.023197999948025,
+            "max": 55.46112499996525
+          }
+        },
+        "history": {
+          "successfulRps": {
+            "median": 31.556477233521555,
+            "min": 30.317780757616223,
+            "max": 32.533889714597414
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 54.84339800023008,
+            "min": 48.26173900028152,
+            "max": 63.385247000042
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 67.07637899990004,
+            "min": 65.59949100028462,
+            "max": 70.68852800011882
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 73.90859141535311,
+            "min": 71.00743387968011,
+            "max": 76.1977943315571
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 56.23549099982483,
+            "min": 52.72195899988219,
+            "max": 56.43438600009176
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 74.49353699985295,
+            "min": 71.9183679998423,
+            "max": 78.38979000007384
+          }
+        },
+        "my_auctions": {
+          "successfulRps": {
+            "median": 14.117371393943854,
+            "min": 13.563217707354626,
+            "max": 14.554634872319896
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 71.02698000016971,
+            "min": 56.23485399974015,
+            "max": 77.5340119998873
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 84.52537499988466,
+            "min": 66.78652200025681,
+            "max": 84.68063999998776
+          }
+        },
+        "my_bids": {
+          "successfulRps": {
+            "median": 14.670993801549495,
+            "min": 14.095108597839122,
+            "max": 15.125404867312833
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 49.47800299987648,
+            "min": 47.577199000443215,
+            "max": 51.1118939998596
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 67.8400930000862,
+            "min": 59.37639300009323,
+            "max": 70.90878300004988
+          }
+        }
+      }
+    },
+    {
+      "case": "mixed",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 302.47159079817783,
+          "min": 302.26086931846754,
+          "max": 308.052953151801
+        },
+        "metrics.successfulRps": {
+          "median": 296.1196873914161,
+          "min": 294.4020867161874,
+          "max": 299.1194175103987
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 313.20211699994616,
+          "min": 301.8479330003174,
+          "max": 325.15173599949776
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 398.9996179998343,
+          "min": 395.25817200001256,
+          "max": 400.88022800000545
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 305.8940839996467,
+          "min": 300.49951799992414,
+          "max": 320.67316500069865
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 386.82704599978024,
+          "min": 381.65538200019,
+          "max": 400.88022800000545
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.026,
+          "min": 0.021,
+          "max": 0.029
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 11.46,
+          "min": 11.419999999999995,
+          "max": 11.600000000000005
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 348.6807596427842,
+          "min": 344.15556711185894,
+          "max": 350.14998159355076
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 11.765913757700206,
+          "min": 11.761071060762095,
+          "max": 11.848825331971405
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 832.046875,
+          "min": 826.15625,
+          "max": 845.30078125
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 61.30253767720839,
+            "min": 61.05669560233045,
+            "max": 62.61161929522281
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 296.82171900003596,
+            "min": 288.84324599994216,
+            "max": 336.19227899998805
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 331.75616400012586,
+            "min": 328.81743399957486,
+            "max": 373.9405810001699
+          }
+        },
+        "create": {
+          "successfulRps": {
+            "median": 26.31502839944147,
+            "min": 26.296695630706676,
+            "max": 26.800606924206683
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 337.6943220000612,
+            "min": 305.340965999676,
+            "max": 338.1366390003677
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 433.6043819994302,
+            "min": 381.65538200019,
+            "max": 514.0318800004025
+          }
+        },
+        "detail": {
+          "successfulRps": {
+            "median": 60.49431815963557,
+            "min": 60.45217386369351,
+            "max": 61.61059063036019
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 292.892171999938,
+            "min": 256.8616309999925,
+            "max": 312.0098899998993
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 370.4882150004778,
+            "min": 312.70635900000343,
+            "max": 376.24027299989393
+          }
+        },
+        "history": {
+          "successfulRps": {
+            "median": 34.48176135099227,
+            "min": 34.457739102305304,
+            "max": 35.11803665930531
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 306.4018019999821,
+            "min": 301.8479330003174,
+            "max": 319.7813529995983
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 351.1664119996567,
+            "min": 322.27987699980076,
+            "max": 368.43641199993726
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 80.75991474311348,
+            "min": 80.70365210803084,
+            "max": 82.25013849153086
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 313.4495510003035,
+            "min": 296.441484999832,
+            "max": 313.9970620004533
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 417.4963579998803,
+            "min": 413.73860399926343,
+            "max": 417.9497690001881
+          }
+        },
+        "my_auctions": {
+          "successfulRps": {
+            "median": 15.42605113070707,
+            "min": 15.415304335241846,
+            "max": 15.71070061074185
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 280.4232889998275,
+            "min": 271.64474799974414,
+            "max": 364.6056640000097
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 438.0934339997111,
+            "min": 351.0402570000224,
+            "max": 443.9258500001415
+          }
+        },
+        "my_bids": {
+          "successfulRps": {
+            "median": 16.030994312303424,
+            "min": 16.019826073878782,
+            "max": 16.32680651704545
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 328.2834020001246,
+            "min": 294.89075699984824,
+            "max": 370.6418070005384
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 385.8553460004259,
+            "min": 365.7728490002228,
+            "max": 525.1696579998679
+          }
+        }
+      }
+    },
+    {
+      "case": "ramp",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 505.2990402049565,
+          "min": 493.9344221493154,
+          "max": 511.69842888687896
+        },
+        "metrics.successfulRps": {
+          "median": 493.9871701057626,
+          "min": 482.828488037579,
+          "max": 500.7835986603557
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 218.3992770005716,
+          "min": 215.57685500010848,
+          "max": 218.64606100007222
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 313.7494809998316,
+          "min": 313.04434800040326,
+          "max": 319.21790599972155
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 208.47991699974955,
+          "min": 205.99733700055367,
+          "max": 209.11704900026962
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 302.2179629997481,
+          "min": 300.3894459998264,
+          "max": 307.33341599989217
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.022386486415263394,
+          "min": 0.021330591634347588,
+          "max": 0.0224846328049175
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 407.78,
+          "min": 407.46999999999997,
+          "max": 408.57000000000005
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 270.0768393696985,
+          "min": 269.8762470633404,
+          "max": 270.5564647500993
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 5.496057685827886,
+          "min": 5.433183951914255,
+          "max": 5.619035798996083
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 966.609375,
+          "min": 965.8515625,
+          "max": 974.05859375
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 115.75525223342258,
+            "min": 113.0102036441865,
+            "max": 117.93876956176145
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 189.61450700044225,
+            "min": 188.90716900023108,
+            "max": 190.26381999992736
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 272.1983689998524,
+            "min": 268.139992000215,
+            "max": 280.0585479999427
+          }
+        },
+        "create": {
+          "successfulRps": {
+            "median": 49.488599439263204,
+            "min": 48.4652844120682,
+            "max": 50.118982480057404
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 224.03319000022748,
+            "min": 222.34902899981535,
+            "max": 226.56991000076232
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 323.61214100001234,
+            "min": 322.58327799991093,
+            "max": 326.82050699986576
+          }
+        },
+        "detail": {
+          "successfulRps": {
+            "median": 101.49390688176084,
+            "min": 99.26095068211467,
+            "max": 102.68198124634668
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 198.7097069995798,
+            "min": 194.95368099978805,
+            "max": 200.67936899977212
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 292.0865040005083,
+            "min": 289.5909649996611,
+            "max": 293.58542899990425
+          }
+        },
+        "history": {
+          "successfulRps": {
+            "median": 51.11979907098922,
+            "min": 50.02996937385361,
+            "max": 51.76386537569575
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 202.20941300067352,
+            "min": 201.17653099987365,
+            "max": 203.52739000009024
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 293.8767249997909,
+            "min": 289.6104989995365,
+            "max": 295.7752600004824
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 126.12169234198343,
+            "min": 123.28385852093072,
+            "max": 127.66821859223765
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 225.91446200021892,
+            "min": 220.95267599979707,
+            "max": 226.55311600010464
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 327.8330969997114,
+            "min": 320.4858669996611,
+            "max": 329.03698300015094
+          }
+        },
+        "my_auctions": {
+          "successfulRps": {
+            "median": 25.19371186306632,
+            "min": 24.55556654921109,
+            "max": 25.44573904548224
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 226.72914199938532,
+            "min": 225.9397279995028,
+            "max": 229.77487900061533
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 337.5964010001553,
+            "min": 314.97491099980834,
+            "max": 339.0748239999084
+          }
+        },
+        "my_bids": {
+          "successfulRps": {
+            "median": 24.814208275277004,
+            "min": 24.22265485521419,
+            "max": 25.166042358774508
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 200.33159900049213,
+            "min": 196.7659209994963,
+            "max": 205.18351299961068
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 296.1936109995804,
+            "min": 275.08291600042867,
+            "max": 303.33126099958463
+          }
+        }
+      }
+    },
+    {
+      "case": "read_large",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 105.17331162266828,
+          "min": 105.04241035164434,
+          "max": 107.66231926261182
+        },
+        "metrics.successfulRps": {
+          "median": 105.17331162266828,
+          "min": 105.04241035164434,
+          "max": 107.66231926261182
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 14.367865000167512,
+          "min": 13.915633999886268,
+          "max": 14.84465600015028
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 16.193491999956677,
+          "min": 15.975778999973045,
+          "max": 16.838438999911887
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 14.367865000167512,
+          "min": 13.915633999886268,
+          "max": 14.84465600015028
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 16.193491999956677,
+          "min": 15.975778999973045,
+          "max": 16.838438999911887
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 18.650000000000006,
+          "min": 18.330000000000002,
+          "max": 18.669999999999987
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 196.2157077698737,
+          "min": 195.72911228929433,
+          "max": 197.18189097955
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 18.650000000000006,
+          "min": 18.330000000000005,
+          "max": 18.669999999999987
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 830.3671875,
+          "min": 827.52734375,
+          "max": 835.2734375
+        }
+      },
+      "operations": {
+        "detail": {
+          "successfulRps": {
+            "median": 21.034662324533656,
+            "min": 21.008482070328867,
+            "max": 21.532463852522365
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 7.125605000055657,
+            "min": 6.99792300019908,
+            "max": 7.601983000085966
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 7.815995000100884,
+            "min": 7.420719999799985,
+            "max": 8.420335000209889
+          }
+        },
+        "filter": {
+          "successfulRps": {
+            "median": 21.034662324533656,
+            "min": 21.008482070328867,
+            "max": 21.532463852522365
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 12.132733000044027,
+            "min": 11.340193999785697,
+            "max": 12.327547000040795
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 13.314268999920387,
+            "min": 12.922460000027058,
+            "max": 13.816092000070057
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 21.034662324533656,
+            "min": 21.008482070328867,
+            "max": 21.532463852522365
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 10.281462999955693,
+            "min": 10.065719000067475,
+            "max": 10.667362000049252
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 12.506482000162578,
+            "min": 11.739605999991909,
+            "max": 12.777025000104913
+          }
+        },
+        "page": {
+          "successfulRps": {
+            "median": 21.034662324533656,
+            "min": 21.008482070328867,
+            "max": 21.532463852522365
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 13.090906000115865,
+            "min": 12.427467000179604,
+            "max": 13.431450999860317
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 15.056632999858266,
+            "min": 14.985400000114169,
+            "max": 16.396358000065447
+          }
+        },
+        "search": {
+          "successfulRps": {
+            "median": 21.034662324533656,
+            "min": 21.008482070328867,
+            "max": 21.532463852522365
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 15.68310300012854,
+            "min": 15.673346000085076,
+            "max": 16.661257999885493
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 17.175829000052545,
+            "min": 16.617450000012468,
+            "max": 22.192265000057887
+          }
+        }
+      }
+    },
+    {
+      "case": "read_large",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 291.624347405065,
+          "min": 286.9660410140663,
+          "max": 293.0181765005997
+        },
+        "metrics.successfulRps": {
+          "median": 291.624347405065,
+          "min": 286.9660410140663,
+          "max": 293.0181765005997
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 54.74872200011305,
+          "min": 52.89670799993473,
+          "max": 55.044295000016064
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 67.39341599995896,
+          "min": 63.81577899992408,
+          "max": 69.4103210000776
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 54.74872200011305,
+          "min": 52.89670799993473,
+          "max": 55.044295000016064
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 67.39341599995896,
+          "min": 63.81577899992408,
+          "max": 69.4103210000776
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 12.059999999999986,
+          "min": 11.990000000000004,
+          "max": 12.27999999999999
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 350.882764883566,
+          "min": 350.14797333661477,
+          "max": 351.11775860901315
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 12.059999999999986,
+          "min": 11.990000000000004,
+          "max": 12.27999999999999
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 845.63671875,
+          "min": 844.99609375,
+          "max": 855.82421875
+        }
+      },
+      "operations": {
+        "detail": {
+          "successfulRps": {
+            "median": 58.324869481013,
+            "min": 57.39320820281326,
+            "max": 58.60363530011993
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 35.253656000122646,
+            "min": 34.81991400008155,
+            "max": 35.454874999913955
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 48.699314000032246,
+            "min": 40.28090199994949,
+            "max": 48.910672999909366
+          }
+        },
+        "filter": {
+          "successfulRps": {
+            "median": 58.324869481013,
+            "min": 57.39320820281326,
+            "max": 58.60363530011993
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 50.98807000013039,
+            "min": 48.953353000115385,
+            "max": 52.17359600010241
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 59.15690500000892,
+            "min": 55.801562999931775,
+            "max": 67.39341599995896
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 58.324869481013,
+            "min": 57.39320820281326,
+            "max": 58.60363530011993
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 52.740293999931964,
+            "min": 48.41492100013056,
+            "max": 54.219161999981225
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 62.28289099999529,
+            "min": 60.370981000005486,
+            "max": 63.36779999992359
+          }
+        },
+        "page": {
+          "successfulRps": {
+            "median": 58.324869481013,
+            "min": 57.39320820281326,
+            "max": 58.60363530011993
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 52.523960999906194,
+            "min": 51.94992699989598,
+            "max": 56.4797339998222
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 63.97508800000651,
+            "min": 63.23492100000294,
+            "max": 71.75407200020345
+          }
+        },
+        "search": {
+          "successfulRps": {
+            "median": 58.324869481013,
+            "min": 57.39320820281326,
+            "max": 58.60363530011993
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 61.220439000180704,
+            "min": 60.973169999897436,
+            "max": 62.96336600007635
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 76.00134200015418,
+            "min": 73.75201399986508,
+            "max": 83.43708200004585
+          }
+        }
+      }
+    },
+    {
+      "case": "read_large",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 300.5874906154945,
+          "min": 285.40066878606655,
+          "max": 312.24092355790464
+        },
+        "metrics.successfulRps": {
+          "median": 300.5874906154945,
+          "min": 285.40066878606655,
+          "max": 312.24092355790464
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 322.1388609999849,
+          "min": 296.1055910000141,
+          "max": 322.25289399980284
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 439.3659329998627,
+          "min": 399.15224099991065,
+          "max": 442.9866729999503
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 322.1388609999849,
+          "min": 296.1055910000141,
+          "max": 322.25289399980284
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 439.3659329998627,
+          "min": 399.15224099991065,
+          "max": 442.9866729999503
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 11.649999999999986,
+          "min": 11.219999999999992,
+          "max": 12.09000000000001
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 347.92212004096854,
+          "min": 343.4886282289599,
+          "max": 348.5501289230875
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 11.649999999999986,
+          "min": 11.219999999999992,
+          "max": 12.09000000000001
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 848.78125,
+          "min": 844.9296875,
+          "max": 850.6796875
+        }
+      },
+      "operations": {
+        "detail": {
+          "successfulRps": {
+            "median": 60.117498123098905,
+            "min": 57.08013375721331,
+            "max": 62.44818471158092
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 286.58093200010626,
+            "min": 283.174641999949,
+            "max": 287.37546499996824
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 325.9794550001516,
+            "min": 311.4789210001163,
+            "max": 395.5764659999659
+          }
+        },
+        "filter": {
+          "successfulRps": {
+            "median": 60.117498123098905,
+            "min": 57.08013375721331,
+            "max": 62.44818471158092
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 313.31709100004446,
+            "min": 289.1784840001037,
+            "max": 326.14812899987555
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 419.5460060000187,
+            "min": 385.1147980001315,
+            "max": 447.2028830000454
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 60.117498123098905,
+            "min": 57.08013375721331,
+            "max": 62.44818471158092
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 313.3251859999291,
+            "min": 290.32938699992883,
+            "max": 362.286554000093
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 446.8752230000064,
+            "min": 396.6466689998924,
+            "max": 471.6775960000632
+          }
+        },
+        "page": {
+          "successfulRps": {
+            "median": 60.117498123098905,
+            "min": 57.08013375721331,
+            "max": 62.44818471158092
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 317.90410700000393,
+            "min": 281.43642000009095,
+            "max": 335.91915300007713
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 439.3659329998627,
+            "min": 330.90875600009895,
+            "max": 445.20346300009805
+          }
+        },
+        "search": {
+          "successfulRps": {
+            "median": 60.117498123098905,
+            "min": 57.08013375721331,
+            "max": 62.44818471158092
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 326.1354520000168,
+            "min": 311.81814000001395,
+            "max": 343.026448000046
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 412.6533129999643,
+            "min": 371.85548699994797,
+            "max": 443.13639500001045
+          }
+        }
+      }
+    },
+    {
+      "case": "read_small",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 122.97991329734865,
+          "min": 121.30582767021245,
+          "max": 124.0239251051482
+        },
+        "metrics.successfulRps": {
+          "median": 122.97991329734865,
+          "min": 121.30582767021245,
+          "max": 124.0239251051482
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 11.604032000036568,
+          "min": 11.446314999943752,
+          "max": 11.984648000066045
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 13.984489999984362,
+          "min": 13.030067000045165,
+          "max": 14.238416000011966
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 11.604032000036568,
+          "min": 11.446314999943752,
+          "max": 11.984648000066045
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 13.984489999984362,
+          "min": 13.030067000045165,
+          "max": 14.238416000011966
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 16.619999999999987,
+          "min": 16.559999999999995,
+          "max": 16.779999999999998
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 203.51587147207763,
+          "min": 203.41673523489564,
+          "max": 205.982146537852
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 16.619999999999987,
+          "min": 16.559999999999995,
+          "max": 16.779999999999998
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 804.4296875,
+          "min": 802.0625,
+          "max": 866.09375
+        }
+      },
+      "operations": {
+        "detail": {
+          "successfulRps": {
+            "median": 24.59598265946973,
+            "min": 24.26116553404249,
+            "max": 24.804785021029637
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 7.950613000048179,
+            "min": 7.948615000032078,
+            "max": 7.985367000060251
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 9.004941000057443,
+            "min": 8.901831000002858,
+            "max": 10.07832100003725
+          }
+        },
+        "filter": {
+          "successfulRps": {
+            "median": 24.59598265946973,
+            "min": 24.26116553404249,
+            "max": 24.804785021029637
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 11.994598000001133,
+            "min": 11.901387000079922,
+            "max": 12.45781000000079
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 13.179340999954547,
+            "min": 12.916413000084503,
+            "max": 13.661518000049
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 24.59598265946973,
+            "min": 24.26116553404249,
+            "max": 24.804785021029637
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 11.635728999976891,
+            "min": 11.271390999922914,
+            "max": 12.07664499997918
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 13.256490000003396,
+            "min": 11.880528999995477,
+            "max": 13.266406000070674
+          }
+        },
+        "page": {
+          "successfulRps": {
+            "median": 24.59598265946973,
+            "min": 24.26116553404249,
+            "max": 24.804785021029637
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 11.207151999997222,
+            "min": 11.081224999998085,
+            "max": 11.832204999905116
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 12.634546999947815,
+            "min": 12.037972000030095,
+            "max": 13.126860999932433
+          }
+        },
+        "search": {
+          "successfulRps": {
+            "median": 24.59598265946973,
+            "min": 24.26116553404249,
+            "max": 24.804785021029637
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 13.005603999999948,
+            "min": 12.257661000035114,
+            "max": 13.18493300004775
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 14.912454999944202,
+            "min": 13.55794699998114,
+            "max": 15.49555600001895
+          }
+        }
+      }
+    },
+    {
+      "case": "read_small",
+      "concurrency": 10,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 295.59721842142,
+          "min": 286.56418768907025,
+          "max": 326.76259042393883
+        },
+        "metrics.successfulRps": {
+          "median": 295.59721842142,
+          "min": 286.56418768907025,
+          "max": 326.76259042393883
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 52.398769000092216,
+          "min": 46.08934500004125,
+          "max": 52.82179600010295
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 65.28807699999106,
+          "min": 55.80992000000151,
+          "max": 66.01978000003328
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 52.398769000092216,
+          "min": 46.08934500004125,
+          "max": 52.82179600010295
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 65.28807699999106,
+          "min": 55.80992000000151,
+          "max": 66.01978000003328
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 11.759999999999998,
+          "min": 10.579999999999998,
+          "max": 12.090000000000005
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 345.25690466468586,
+          "min": 344.37825631428433,
+          "max": 346.8530258266687
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 11.759999999999998,
+          "min": 10.579999999999998,
+          "max": 12.090000000000005
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 803.7578125,
+          "min": 800.72265625,
+          "max": 805.01953125
+        }
+      },
+      "operations": {
+        "detail": {
+          "successfulRps": {
+            "median": 59.11944368428399,
+            "min": 57.312837537814055,
+            "max": 65.35251808478776
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 39.481141999999636,
+            "min": 34.98974100000396,
+            "max": 44.6290869999757
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 48.88907699989886,
+            "min": 48.323568000000705,
+            "max": 55.99049500006004
+          }
+        },
+        "filter": {
+          "successfulRps": {
+            "median": 59.11944368428399,
+            "min": 57.312837537814055,
+            "max": 65.35251808478776
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 52.65775499992742,
+            "min": 47.4718870000288,
+            "max": 54.703685999925256
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 61.38052599999355,
+            "min": 55.65155700003288,
+            "max": 66.95748300001014
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 59.11944368428399,
+            "min": 57.312837537814055,
+            "max": 65.35251808478776
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 47.205184999938865,
+            "min": 45.19535700001143,
+            "max": 53.598830000055386
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 59.986169000012524,
+            "min": 57.20636600005946,
+            "max": 63.110837999943215
+          }
+        },
+        "page": {
+          "successfulRps": {
+            "median": 59.11944368428399,
+            "min": 57.312837537814055,
+            "max": 65.35251808478776
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 51.444965000086995,
+            "min": 42.19400099998438,
+            "max": 52.1408719999954
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 62.763617000086924,
+            "min": 49.19312799995623,
+            "max": 66.01978000003328
+          }
+        },
+        "search": {
+          "successfulRps": {
+            "median": 59.11944368428399,
+            "min": 57.312837537814055,
+            "max": 65.35251808478776
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 54.319565000014336,
+            "min": 50.606041000037294,
+            "max": 54.51503500000854
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 67.50104200000351,
+            "min": 57.34762999998111,
+            "max": 70.33248799996272
+          }
+        }
+      }
+    },
+    {
+      "case": "read_small",
+      "concurrency": 50,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 308.43559258118194,
+          "min": 305.98251880257936,
+          "max": 309.25144347192406
+        },
+        "metrics.successfulRps": {
+          "median": 308.43559258118194,
+          "min": 305.98251880257936,
+          "max": 309.25144347192406
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 302.01420000003054,
+          "min": 298.73702100007904,
+          "max": 310.314531999893
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 391.5614679999635,
+          "min": 371.7323050000232,
+          "max": 436.6066200000205
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 302.01420000003054,
+          "min": 298.73702100007904,
+          "max": 310.314531999893
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 391.5614679999635,
+          "min": 371.7323050000232,
+          "max": 436.6066200000205
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 11.339999999999998,
+          "min": 11.129999999999999,
+          "max": 11.41
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 346.93668328512456,
+          "min": 341.028549299076,
+          "max": 348.5964017646994
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 11.339999999999998,
+          "min": 11.129999999999999,
+          "max": 11.41
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 810.55859375,
+          "min": 810.00390625,
+          "max": 825.69921875
+        }
+      },
+      "operations": {
+        "detail": {
+          "successfulRps": {
+            "median": 61.68711851623638,
+            "min": 61.196503760515874,
+            "max": 61.85028869438481
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 281.9980780000151,
+            "min": 258.0222579999827,
+            "max": 283.0698399998255
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 360.0234159998763,
+            "min": 348.9464910001061,
+            "max": 396.6232279999531
+          }
+        },
+        "filter": {
+          "successfulRps": {
+            "median": 61.68711851623638,
+            "min": 61.196503760515874,
+            "max": 61.85028869438481
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 327.3162030000094,
+            "min": 319.258131999959,
+            "max": 339.41197900003317
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 446.6079500000433,
+            "min": 364.8313580001741,
+            "max": 457.8490189999229
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 61.68711851623638,
+            "min": 61.196503760515874,
+            "max": 61.85028869438481
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 292.57318300005863,
+            "min": 284.7767060000024,
+            "max": 309.2938370000411
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 351.74034600004234,
+            "min": 346.7798619999485,
+            "max": 436.6066200000205
+          }
+        },
+        "page": {
+          "successfulRps": {
+            "median": 61.68711851623638,
+            "min": 61.196503760515874,
+            "max": 61.85028869438481
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 295.1438090001375,
+            "min": 281.61314199996923,
+            "max": 302.01420000003054
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 365.9527290001279,
+            "min": 356.8939669999054,
+            "max": 389.56761800000095
+          }
+        },
+        "search": {
+          "successfulRps": {
+            "median": 61.68711851623638,
+            "min": 61.196503760515874,
+            "max": 61.85028869438481
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 307.88857399988956,
+            "min": 296.72438699981285,
+            "max": 348.4705319999648
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 375.8488020000641,
+            "min": 350.98676199993406,
+            "max": 391.5614679999635
+          }
+        }
+      }
+    },
+    {
+      "case": "scheduler_large",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "resourceMetrics.cpuSeconds": {
+          "median": 69.83999999999999,
+          "min": 69.62,
+          "max": 71.91000000000001
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 167.3859233099391,
+          "min": 165.66533932576922,
+          "max": 169.51572679842798
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 840.25,
+          "min": 834.40234375,
+          "max": 843.765625
+        },
+        "scheduler.openObservedLag.p95Ms": {
+          "median": 1960.338830947876,
+          "min": 1424.860954284668,
+          "max": 2341.8490886688232
+        },
+        "scheduler.openObservedLag.p99Ms": {
+          "median": 1985.3978157043457,
+          "min": 1444.230079650879,
+          "max": 2360.4941368103027
+        },
+        "scheduler.endObservedLag.p95Ms": {
+          "median": 4506.185054779053,
+          "min": 4013.2579803466797,
+          "max": 4902.882099151611
+        },
+        "scheduler.endObservedLag.p99Ms": {
+          "median": 4525.841951370239,
+          "min": 4035.348892211914,
+          "max": 4922.084093093872
+        },
+        "scheduler.missedOpen": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "scheduler.missedEnd": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "operations": {}
+    },
+    {
+      "case": "scheduler_small",
+      "concurrency": 1,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "resourceMetrics.cpuSeconds": {
+          "median": 34.92,
+          "min": 33.73,
+          "max": 35.69
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 84.95632611132412,
+          "min": 81.23432477539383,
+          "max": 87.6962238160705
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 805.7265625,
+          "min": 801.87109375,
+          "max": 810.23828125
+        },
+        "scheduler.openObservedLag.p95Ms": {
+          "median": 1216.780185699463,
+          "min": 831.5980434417725,
+          "max": 1464.8618698120117
+        },
+        "scheduler.openObservedLag.p99Ms": {
+          "median": 1217.6551818847656,
+          "min": 838.3080959320068,
+          "max": 1466.865062713623
+        },
+        "scheduler.endObservedLag.p95Ms": {
+          "median": 1741.7190074920654,
+          "min": 1191.0061836242676,
+          "max": 1947.0620155334473
+        },
+        "scheduler.endObservedLag.p99Ms": {
+          "median": 1743.7570095062256,
+          "min": 1194.486141204834,
+          "max": 1948.8790035247803
+        },
+        "scheduler.missedOpen": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        },
+        "scheduler.missedEnd": {
+          "median": 0,
+          "min": 0,
+          "max": 0
+        }
+      },
+      "operations": {}
+    },
+    {
+      "case": "soak",
+      "concurrency": 25,
+      "repeats": 3,
+      "correctness": {
+        "passed": 3
+      },
+      "metrics": {
+        "metrics.totalRps": {
+          "median": 540.8968893766172,
+          "min": 540.4864516015157,
+          "max": 550.581310636743
+        },
+        "metrics.successfulRps": {
+          "median": 538.4339041324318,
+          "min": 538.0767646460445,
+          "max": 548.0450218129937
+        },
+        "metrics.latencyAll.p95Ms": {
+          "median": 84.61494600032893,
+          "min": 82.71975699972245,
+          "max": 85.51535300011892
+        },
+        "metrics.latencyAll.p99Ms": {
+          "median": 110.78471400014678,
+          "min": 108.97761299929698,
+          "max": 113.74992699984432
+        },
+        "metrics.latencySuccessful.p95Ms": {
+          "median": 84.3034119998265,
+          "min": 82.39830499951495,
+          "max": 85.23271000012755
+        },
+        "metrics.latencySuccessful.p99Ms": {
+          "median": 110.17163100041216,
+          "min": 108.41577599967422,
+          "max": 113.35320199941634
+        },
+        "metrics.unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "metrics.businessConflictRate": {
+          "median": 0.004553520814334656,
+          "min": 0.004458366992051404,
+          "max": 0.004606565415044886
+        },
+        "resourceMetrics.cpuSeconds": {
+          "median": 926.0999999999999,
+          "min": 925.5699999999999,
+          "max": 930.9
+        },
+        "resourceMetrics.cpuPercentOfOneCore": {
+          "median": 306.43503072675117,
+          "min": 306.19931246179874,
+          "max": 308.06836868899626
+        },
+        "resourceMetrics.cpuMsPerSuccessfulRequest": {
+          "median": 5.736354401526225,
+          "min": 5.628686799888103,
+          "max": 5.762195688102357
+        },
+        "resourceMetrics.peakRssMiB": {
+          "median": 1091.90234375,
+          "min": 1090.63671875,
+          "max": 1096.1640625
+        }
+      },
+      "operations": {
+        "bid": {
+          "successfulRps": {
+            "median": 133.15118198977913,
+            "min": 133.10937431204457,
+            "max": 135.52980948458014
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 92.148544000338,
+            "min": 89.82477599965932,
+            "max": 93.44805700038705
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 119.8807040000247,
+            "min": 118.46538800000417,
+            "max": 123.28599800002848
+          }
+        },
+        "create": {
+          "successfulRps": {
+            "median": 53.415784179374484,
+            "min": 53.383064959587806,
+            "max": 54.43189102427549
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 81.19797099971038,
+            "min": 80.1577170004748,
+            "max": 82.37135499985015
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 105.12545299934573,
+            "min": 105.0800889997845,
+            "max": 106.92116100017302
+          }
+        },
+        "detail": {
+          "successfulRps": {
+            "median": 108.01806733970967,
+            "min": 107.94264374390775,
+            "max": 109.97694954806775
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 71.75385800019285,
+            "min": 69.94878800014703,
+            "max": 71.77698099985719
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 93.87081600016245,
+            "min": 92.7224090000891,
+            "max": 94.25439599999663
+          }
+        },
+        "history": {
+          "successfulRps": {
+            "median": 54.51562874037739,
+            "min": 54.46959047477952,
+            "max": 55.415077887621145
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 81.82735699938348,
+            "min": 81.3457730000664,
+            "max": 84.43263200024376
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 108.90789899985975,
+            "min": 107.22023800008174,
+            "max": 111.51939000046696
+          }
+        },
+        "list": {
+          "successfulRps": {
+            "median": 135.4741870171095,
+            "min": 135.36241495090837,
+            "max": 137.7728086677382
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 85.73477000027196,
+            "min": 83.49636799994187,
+            "max": 86.35822300038853
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 110.49384899979486,
+            "min": 107.45079699972848,
+            "max": 113.57522500020423
+          }
+        },
+        "my_auctions": {
+          "successfulRps": {
+            "median": 27.25614793903566,
+            "min": 27.233128787213086,
+            "max": 27.839185998394143
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 87.67615600027057,
+            "min": 85.93763499993656,
+            "max": 88.47345800040785
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 114.27849499978038,
+            "min": 111.22316399996635,
+            "max": 116.68916400049056
+          }
+        },
+        "my_bids": {
+          "successfulRps": {
+            "median": 26.602906927046053,
+            "min": 26.576547417603372,
+            "max": 27.07929920231682
+          },
+          "latencySuccessful.p95Ms": {
+            "median": 78.1142900004852,
+            "min": 76.07591199939634,
+            "max": 80.74143499925412
+          },
+          "latencySuccessful.p99Ms": {
+            "median": 104.35466099988844,
+            "min": 101.64384299969242,
+            "max": 107.02138899978308
+          }
+        }
+      }
+    }
+  ],
+  "ramp": [
+    {
+      "concurrency": 1,
+      "metrics": {
+        "totalRps": {
+          "median": 132.69555763139,
+          "min": 129.51164157526847,
+          "max": 139.58383274444756
+        },
+        "successfulRps": {
+          "median": 132.69555763139,
+          "min": 129.51164157526847,
+          "max": 139.58383274444756
+        },
+        "latencySuccessful.p95Ms": {
+          "median": 11.702618000526854,
+          "min": 11.210724999727972,
+          "max": 12.18294699992839
+        },
+        "latencySuccessful.p99Ms": {
+          "median": 15.196425000794989,
+          "min": 14.166124999974272,
+          "max": 15.820581999832939
+        },
+        "businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "concurrency": 10,
+      "metrics": {
+        "totalRps": {
+          "median": 517.7521406043544,
+          "min": 505.2570906906603,
+          "max": 521.6208823496004
+        },
+        "successfulRps": {
+          "median": 517.7521406043544,
+          "min": 505.2570906906603,
+          "max": 521.6208823496004
+        },
+        "latencySuccessful.p95Ms": {
+          "median": 31.94450799946935,
+          "min": 31.738898999719822,
+          "max": 32.59356000035041
+        },
+        "latencySuccessful.p99Ms": {
+          "median": 42.94569400008186,
+          "min": 42.18315199977951,
+          "max": 44.42811399985658
+        },
+        "businessConflictRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        },
+        "unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "concurrency": 25,
+      "metrics": {
+        "totalRps": {
+          "median": 577.2492226954676,
+          "min": 561.5547617878552,
+          "max": 581.1035842280575
+        },
+        "successfulRps": {
+          "median": 574.5846368195437,
+          "min": 558.49088810238,
+          "max": 578.2396926381656
+        },
+        "latencySuccessful.p95Ms": {
+          "median": 74.24201499998162,
+          "min": 73.18633399972896,
+          "max": 76.50722800008225
+        },
+        "latencySuccessful.p99Ms": {
+          "median": 93.5435929995947,
+          "min": 90.47441300026549,
+          "max": 96.08236799977021
+        },
+        "businessConflictRate": {
+          "median": 0.004928366762177651,
+          "min": 0.004616006000807801,
+          "max": 0.0054560550349899185
+        },
+        "unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "concurrency": 50,
+      "metrics": {
+        "totalRps": {
+          "median": 649.989958370477,
+          "min": 611.115660793864,
+          "max": 664.0687895212874
+        },
+        "successfulRps": {
+          "median": 634.6518456140893,
+          "min": 597.1087088560256,
+          "max": 649.6194836628576
+        },
+        "latencySuccessful.p95Ms": {
+          "median": 139.0548570007013,
+          "min": 134.64466100049322,
+          "max": 146.70552799998404
+        },
+        "latencySuccessful.p99Ms": {
+          "median": 173.85473899958015,
+          "min": 168.9084660001754,
+          "max": 186.45974100036256
+        },
+        "businessConflictRate": {
+          "median": 0.022920296167247386,
+          "min": 0.021758748621277448,
+          "max": 0.0235974610974611
+        },
+        "unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    {
+      "concurrency": 100,
+      "metrics": {
+        "totalRps": {
+          "median": 655.3637373972336,
+          "min": 647.400026633802,
+          "max": 658.266419853079
+        },
+        "successfulRps": {
+          "median": 617.970411608732,
+          "min": 609.122217627328,
+          "max": 619.8849914654619
+        },
+        "latencySuccessful.p95Ms": {
+          "median": 290.41065399997024,
+          "min": 286.8115549999857,
+          "max": 295.88692000015726
+        },
+        "latencySuccessful.p99Ms": {
+          "median": 378.8829450004414,
+          "min": 371.9535049995102,
+          "max": 380.2850829997624
+        },
+        "businessConflictRate": {
+          "median": 0.05830683022868393,
+          "min": 0.05705736166759649,
+          "max": 0.05912543625538904
+        },
+        "unexpectedErrorRate": {
+          "median": 0.0,
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    }
+  ]
+}

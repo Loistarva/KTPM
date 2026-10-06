@@ -114,4 +114,75 @@ class ComparisonTests(unittest.TestCase):
             if cell['cell_type']=='code': ast.parse(''.join(cell['source']))
 
 
+class KaggleInputTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import ast, hashlib, shutil, zipfile
+        notebook=json.loads(Path('notebooks/KTPM_CPU_Benchmark.ipynb').read_text(encoding='utf-8'))
+        cell=ast.parse(''.join(notebook['cells'][1]['source']))
+        selected=[]
+        for node in cell.body:
+            if isinstance(node,ast.FunctionDef) and node.name in ('source_roots','resolve_input','content_hash','materialize_input'):
+                selected.append(node)
+            elif isinstance(node,ast.Assign) and any(isinstance(t,ast.Name) and t.id in ('REQUIRED','IGNORED') for t in node.targets):
+                selected.append(node)
+        cls.helpers=dict(Path=Path,hashlib=hashlib,shutil=shutil,zipfile=zipfile)
+        exec(compile(ast.Module(body=selected,type_ignores=[]),'notebook-input-helpers','exec'),cls.helpers)
+
+    def fixture(self, root):
+        root.mkdir(parents=True,exist_ok=True)
+        for name in self.helpers['REQUIRED']:
+            path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_text(name,encoding='utf-8')
+        return root
+
+    def test_auto_detect_extracted_dataset_and_copy(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);source=self.fixture(root/'input'/'dataset'/'wrapper')
+            found=self.helpers['resolve_input']('ktpm-p1-source.zip','P1',root/'input')
+            self.assertEqual(source,found)
+            copied,digest=self.helpers['materialize_input'](found,root/'working')
+            self.assertEqual(digest,self.helpers['content_hash'](source))
+            self.assertTrue((copied/'backend/pom.xml').exists())
+            self.assertTrue((source/'backend/pom.xml').exists())
+
+    def test_zip_and_extracted_source_have_same_hash(self):
+        import tempfile,zipfile
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);source=self.fixture(root/'input'/'dataset');archive=root/'input'/'ktpm-p1-source.zip'
+            with zipfile.ZipFile(archive,'w') as stream:
+                for file in source.rglob('*'):
+                    if file.is_file(): stream.write(file,file.relative_to(source).as_posix())
+            found=self.helpers['resolve_input']('ktpm-p1-source.zip','P1',root/'input')
+            self.assertEqual(archive,found)
+            _,digest=self.helpers['materialize_input'](found,root/'working')
+            self.assertEqual(digest,self.helpers['content_hash'](source))
+
+    def test_two_extracted_phases_require_explicit_paths(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);p1=self.fixture(root/'input'/'phase1');p2=self.fixture(root/'input'/'phase2')
+            with self.assertRaises(RuntimeError):
+                self.helpers['resolve_input']('ktpm-p1-source.zip','P1',root/'input')
+            self.assertEqual(p1,self.helpers['resolve_input'](str(p1),'P1',root/'input',False))
+            self.assertEqual(p2,self.helpers['resolve_input'](str(p2),'P2',root/'input',False))
+
+    def test_duplicate_archives_rejected(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary)
+            for name in ('a','b'):
+                folder=root/name;folder.mkdir();(folder/'ktpm-p1-source.zip').write_bytes(b'zip')
+            with self.assertRaises(RuntimeError):
+                self.helpers['resolve_input']('ktpm-p1-source.zip','P1',root)
+
+    def test_zip_traversal_rejected_before_extract(self):
+        import tempfile,zipfile
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary);archive=root/'bad.zip'
+            with zipfile.ZipFile(archive,'w') as stream: stream.writestr('../outside.txt','bad')
+            with self.assertRaises(RuntimeError): self.helpers['materialize_input'](archive,root/'working')
+            self.assertFalse((root/'outside.txt').exists())
+
+
 if __name__ == '__main__': unittest.main()

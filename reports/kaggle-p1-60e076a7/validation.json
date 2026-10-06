@@ -1,0 +1,23 @@
+{
+  "zipSha256": "3213478c0eaed305dd84b1e309433d9fe9b4bb9249044ce6834cae7311922cad",
+  "session": "60e076a7186a4fbe9b303355deeb1588",
+  "phases": [
+    "P1"
+  ],
+  "trials": 108,
+  "cases": 15,
+  "correctness": {
+    "passed": 108
+  },
+  "harnessHashes": [
+    "da97669a9266c3f9c3313cf3c8d009a75c5bfc21d4da33eee5f4befd183b9f62"
+  ],
+  "sourceHashes": [
+    "5a6978bfb71fbc99e8daccc06495db7110571c2e0b4b5a77f67058db067dec05"
+  ],
+  "rawRequests": 853846,
+  "successfulRequests": 797797,
+  "unexpectedErrors": 0,
+  "bidConflicts": 56049,
+  "consistencyIssues": []
+}

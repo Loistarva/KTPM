@@ -2,44 +2,33 @@
 
 ```mermaid
 flowchart TB
-    Browser["Người dùng / Admin<br/>Trình duyệt"]
-    Swagger["Swagger<br/>Thử REST API"]
+    Browser["Trình duyệt<br/>Người dùng / Admin"]
+    Frontend["Frontend · localhost:5173<br/>Nginx phục vụ giao diện React"]
 
-    subgraph Frontend["Container frontend — cổng 5173"]
-        UI["React + TypeScript<br/>Giao diện đấu giá"]
-        Nginx["Nginx<br/>Phục vụ giao diện và proxy /api"]
-        Nginx -->|"File HTML / CSS / JS"| UI
+    subgraph Backend["Backend Spring Boot · localhost:8080"]
+        API["API<br/>Controller"]
+        Business["Nghiệp vụ<br/>Application + Domain"]
+        Data["Truy cập dữ liệu<br/>Adapter JPA / Hibernate"]
+        Scheduler["Scheduler<br/>Mở / kết thúc phiên"]
+
+        API --> Business
+        Business -->|"Qua interface Store / UnitOfWork"| Data
+        Scheduler --> Business
     end
 
-    subgraph Backend["Container backend — cổng 8080"]
-        Security["Spring Security + JWT filter<br/>Xác thực và phân quyền"]
-        API["API — Controller<br/>Nhận JSON, validation, trả HTTP"]
-        Application["Application — Nghiệp vụ<br/>Auth · User · Auction · Bidding · Admin"]
-        Domain["Domain / interface thuần Java<br/>Model, luật bid, Store và UnitOfWork"]
-        Infrastructure["Infrastructure<br/>Adapter JPA, ORM và transaction"]
-        Scheduler["Scheduler trong auction<br/>Quét và mở/kết thúc phiên"]
+    DB[("PostgreSQL · localhost:5432<br/>users · auctions · bids")]
 
-        Security --> API --> Application
-        Application --> Domain
-        Domain -->|"Gọi adapter triển khai interface"| Infrastructure
-        Scheduler -->|"Gọi nghiệp vụ theo lịch"| Application
-    end
-
-    subgraph Database["Container PostgreSQL — cổng 5432"]
-        DB[("users · auctions · bids<br/>flyway_schema_history")]
-        Volume["Docker volume<br/>Lưu dữ liệu qua các lần khởi động"]
-        DB --- Volume
-    end
-
-    Browser -->|"Mở trang"| Nginx
-    Browser -->|"Thao tác trên giao diện"| UI
-    UI -->|"REST / JSON, JWT khi cần"| Nginx
-    Nginx -->|"Proxy /api tới backend:8080"| Security
-    Swagger -->|"REST / JSON"| Security
-    Infrastructure -->|"Đọc/ghi PostgreSQL"| DB
+    Browser -->|"Trang web / thao tác"| Frontend
+    Frontend -->|"Proxy /api · REST / JSON"| API
+    Browser -.->|"Thử API bằng Swagger"| API
+    Data -->|"Đọc / ghi"| DB
 ```
 
-- API gọi nghiệp vụ; nghiệp vụ dùng model và interface, không import framework web/DB. JPA và transaction được triển khai ở infrastructure. `UnitOfWork` nằm trong common.
-- JWT filter xử lý xác thực tập trung; endpoint công khai không yêu cầu token, endpoint admin cần quyền ADMIN.
-- Scheduler xử lý phiên đến hạn, chờ 5 giây sau mỗi lượt. Giao diện lấy dữ liệu khi thao tác hoặc Làm mới/F5, không có realtime/polling.
-- Sơ đồ thể hiện cách chạy Docker. Khi chạy trực tiếp, React dùng Vite proxy, backend và PostgreSQL portable chạy trên host; các tầng backend giữ nguyên.
+Sơ đồ thể hiện luồng xử lý với ba container Docker và các cổng mặc định. React chạy trong trình duyệt; Nginx phục vụ HTML/CSS/JS và chuyển request `/api` tới backend. Swagger truy cập trực tiếp backend ở cổng 8080.
+
+- **Phân tầng:** API → Nghiệp vụ → Truy cập dữ liệu. Application dùng model/luật và interface trong Domain; nghiệp vụ không import web/JPA. Infrastructure triển khai các interface và transaction. `UnitOfWork` thuộc common.
+- **Bảo mật:** Spring Security/JWT filter xác thực trước controller; endpoint công khai không cần token, endpoint admin cần quyền ADMIN. Code security thuộc `auth/infrastructure`.
+- **Scheduler:** thuộc `auction/infrastructure`, gọi service nghiệp vụ lúc khởi động và theo lịch; xử lý tuần tự, chờ 5 giây sau mỗi lượt hoàn tất.
+- **Dữ liệu:** PostgreSQL lưu bền trong Docker volume; Flyway quản lý migration qua bảng kỹ thuật `flyway_schema_history`.
+
+Khi chạy trực tiếp, Vite thay Nginx để phục vụ frontend/proxy; PostgreSQL portable dùng cổng 55432. Giao diện cập nhật khi thao tác hoặc Làm mới/F5; không có realtime/polling.

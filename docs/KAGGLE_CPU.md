@@ -54,10 +54,17 @@ Smoke chỉ kiểm tra pipeline: 4 bidder, 24 request, warmup 4, concurrency 1/3
 
    File tạo ra: `backend/.local/kaggle/ktpm-p1-source.zip`. Nếu đã có, xóa **đúng ZIP cũ** trước khi xuất lại. Giữ một bản ZIP P1 đã đo làm baseline.
 2. Trên Kaggle tạo Dataset, upload ZIP này. Tạo Notebook, import `notebooks/KTPM_CPU_Benchmark.ipynb`, Add Input chọn dataset.
-3. Chọn **Accelerator: None**, bật **Internet** cho bước cài/build. Không cần Docker trong Kaggle.
-4. Để `PROFILE = 'smoke'`, `CASE_FILTER = []`, chạy tất cả cell. Kiểm tra mỗi report có `correctness.status = passed`.
-5. Đổi `PROFILE = 'full'`, chạy lại **tất cả cell**. Notebook tự tạo folder kết quả mới, tránh ghép dữ liệu cũ.
-6. Tải ZIP `results-full-<session>.zip` trong Output của notebook. Giữ notebook, ZIP source, config và kết quả cùng nhau.
+3. Kaggle có thể tự giải nén ZIP thành `backend/` và `scripts/`. Notebook nhận cả ZIP lẫn thư mục đã giải nén; với một dataset source duy nhất sẽ tự tìm. Nếu có nhiều dataset, đặt đường dẫn source vào cell đầu:
+
+   ```python
+   PHASE_ARCHIVES = {'P1': '/kaggle/input/ten-dataset-cua-ban'}
+   ```
+
+   Thư mục cần chứa `backend/pom.xml` và `scripts/benchmark_suite.py` (có thể nằm trong một thư mục con). Notebook chép source sang `/kaggle/working` để build, không ghi vào Input. SHA256 source tính theo đường dẫn/nội dung file nên cùng source dạng ZIP hoặc giải nén cho cùng hash.
+4. Chọn **Accelerator: None**, bật **Internet** cho bước cài/build. Không cần Docker trong Kaggle.
+5. Để `PROFILE = 'smoke'`, `CASE_FILTER = []`, chạy tất cả cell. Kiểm tra mỗi report có `correctness.status = passed`.
+6. Đổi `PROFILE = 'full'`, chạy lại **tất cả cell**. Notebook tự tạo folder kết quả mới, tránh ghép dữ liệu cũ.
+7. Tải ZIP `results-full-<session>.zip` trong Output của notebook. Giữ notebook, ZIP source, config và kết quả cùng nhau.
 
 Notebook tự cài Java nếu thiếu, build backend bằng Maven, tạo user thường khi kernel là root và chạy PostgreSQL thật thông qua `LocalDemo`. Backend, database và client cùng kernel Kaggle. Không liên quan dữ liệu Docker/portable trên máy Windows.
 
@@ -79,6 +86,12 @@ Notebook tự cài Java nếu thiếu, build backend bằng Maven, tạo user th
    PHASE_ARCHIVES = {'P1': 'ktpm-p1-source.zip', 'P2': 'ktpm-p2-source.zip'}
    CASE_FILTER = []
    ```
+
+Nếu Kaggle giải nén cả hai ZIP, đổi các giá trị sang hai thư mục dataset tương ứng, ví dụ:
+
+```python
+PHASE_ARCHIVES = {'P1': '/kaggle/input/dataset-p1', 'P2': '/kaggle/input/dataset-p2'}
+```
 
 4. Chạy lại tất cả cell. Notebook build cả hai source nhưng **luôn lấy harness/config từ P1**. Mỗi trial chạy P1/P2 xen kẽ, đảo thứ tự ở lần lặp chẵn; cả hai cùng kernel, heap JVM và database mới. `ActiveProcessorCount=2` là cấu hình JVM, không ghim hệ thống vào hai core vật lý; affinity và giới hạn cgroup thực tế được ghi riêng.
 5. Mở `comparison/comparison.csv` hoặc `.md` trong ZIP kết quả. Có median/min/max ba lần đo và % cải thiện cho mỗi case/mức tải/metric. Ramp có dòng riêng cho từng mức tải; không chỉ xem số tổng.
