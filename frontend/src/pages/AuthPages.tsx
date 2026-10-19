@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowRight, Gavel } from "lucide-react";
+import { ArrowRight, Gavel, ShieldCheck, Sparkles } from "lucide-react";
 import { api } from "../lib/api";
 import { useAuth } from "../context";
 import { Field, ErrorBox } from "../components";
@@ -62,23 +62,32 @@ export function AuthPage({ register = false }: { register?: boolean }) {
   return (
     <div className="auth-shell">
       <aside className="auth-story">
-        <Gavel size={42} />
+        <span className="auth-brand-icon">
+          <Gavel size={25} />
+        </span>
         <p className="eyebrow">KTPM AUCTION</p>
         <h1>
-          Mỗi lượt đặt giá,
+          Tìm món đồ mình thích.
           <br />
-          một cơ hội mới.
+          Chọn mức giá của mình.
         </h1>
-        <p>Tìm sản phẩm bạn yêu thích, chọn mức giá và tham gia đấu giá.</p>
+        <p>
+          Một cộng đồng, nhiều cơ hội mới. Bắt đầu hành trình khám phá và đấu
+          giá cùng KTPM.
+        </p>
         <div className="story-note">
-          Tài khoản của bạn có thể vừa mua, vừa bán.
-          <br />
-          Bạn chủ động đặt giá trong mỗi phiên.
+          <Sparkles size={18} />
+          <div>
+            <strong>Một tài khoản, mọi cơ hội.</strong>
+            <span>Vừa khám phá, vừa bán những món đồ của bạn.</span>
+          </div>
         </div>
       </aside>
       <section className="panel auth-form">
-        <p className="eyebrow">CHÀO MỪNG ĐẾN KTPM</p>
-        <h2>{register ? "Tạo tài khoản" : "Đăng nhập"}</h2>
+        <p className="eyebrow">
+          {register ? "BẮT ĐẦU CÂU CHUYỆN CỦA BẠN" : "RẤT VUI ĐƯỢC GẶP LẠI BẠN"}
+        </p>
+        <h2>{register ? "Tạo tài khoản" : "Chào mừng trở lại."}</h2>
         <p className="muted">
           {register
             ? "Bắt đầu hành trình đấu giá của bạn."
@@ -98,6 +107,7 @@ export function AuthPage({ register = false }: { register?: boolean }) {
                   pattern="[a-zA-Z0-9_]{3,50}"
                   maxLength={50}
                   autoComplete="username"
+                  placeholder="Tên tài khoản của bạn"
                 />
               </Field>
               <Field label="Email">
@@ -108,6 +118,7 @@ export function AuthPage({ register = false }: { register?: boolean }) {
                   required
                   maxLength={254}
                   autoComplete="email"
+                  placeholder="ban@example.com"
                 />
               </Field>
             </>
@@ -119,6 +130,7 @@ export function AuthPage({ register = false }: { register?: boolean }) {
                 required
                 maxLength={254}
                 autoComplete="username"
+                placeholder="Nhập tài khoản hoặc email"
               />
             </Field>
           )}
@@ -134,6 +146,7 @@ export function AuthPage({ register = false }: { register?: boolean }) {
               minLength={register ? 8 : undefined}
               maxLength={72}
               autoComplete={register ? "new-password" : "current-password"}
+              placeholder={register ? "Tạo mật khẩu của bạn" : "Nhập mật khẩu"}
             />
           </Field>
           {error && <ErrorBox error={error} />}
@@ -153,6 +166,9 @@ export function AuthPage({ register = false }: { register?: boolean }) {
           >
             {register ? "Đăng nhập" : "Đăng ký ngay"}
           </Link>
+        </p>
+        <p className="auth-assurance">
+          <ShieldCheck size={14} /> Tài khoản của bạn được bảo vệ và xác thực.
         </p>
       </section>
     </div>

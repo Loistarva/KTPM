@@ -14,6 +14,25 @@ class ApiIntegrationTest extends TestSupport {
   private final ObjectMapper json = new ObjectMapper();
 
   @Test
+  void allowedBrowserOriginsReceiveCorsHeadersAndPreflight() throws Exception {
+    mvc.perform(
+            MockMvcRequestBuilders.get("/api/auctions").header("Origin", "http://localhost:5173"))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
+    mvc.perform(
+            MockMvcRequestBuilders.options("/api/auctions/1/bids")
+                .header("Origin", "http://localhost:5173")
+                .header("Access-Control-Request-Method", "POST")
+                .header("Access-Control-Request-Headers", "Authorization,Content-Type"))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"));
+    mvc.perform(
+            MockMvcRequestBuilders.get("/api/auctions")
+                .header("Origin", "http://untrusted.example"))
+        .andExpect(status().isForbidden());
+  }
+
+  @Test
   void failedAuctionWriteRollsBackBidAndPreviousLeader() {
     var a = auction(account().id());
     var first = account();
@@ -125,7 +144,8 @@ class ApiIntegrationTest extends TestSupport {
             "SELECT table_name FROM information_schema.tables WHERE table_schema='public'",
             String.class);
     assertEquals(
-        Set.of("users", "auctions", "bids", "flyway_schema_history"), new HashSet<>(tables));
+        Set.of("users", "auctions", "bids", "auction_outbox", "flyway_schema_history"),
+        new HashSet<>(tables));
     var body =
         mvc.perform(MockMvcRequestBuilders.get("/v3/api-docs"))
             .andExpect(status().isOk())

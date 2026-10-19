@@ -10,6 +10,10 @@ public interface BidStore {
 
   void saveAllAndFlush(List<Bid> bids);
 
+  void outbid(Long bidId);
+
+  void closeAuction(Long auctionId, boolean success);
+
   long count();
 
   List<Bid> findByAuctionIdAndStatus(Long id, String status);

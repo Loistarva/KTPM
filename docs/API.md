@@ -1,10 +1,10 @@
-# KTPM — API Pha 1
+# KTPM — API Pha 2
 
 Base URL local: `http://localhost:8080`. Gửi `Content-Type: application/json` khi có body.
 JWT đặt tại `Authorization: Bearer <accessToken>`; lấy token thật sau login, không có token cố định.
 OpenAPI runtime `/v3/api-docs` là hợp đồng machine-readable; Swagger `/swagger-ui/index.html` cho phép thử trực tiếp.
 
-## Toàn bộ 16 endpoint
+## Endpoint nghiệp vụ và realtime
 
 | Method | Path | Quyền | Kết quả |
 |---|---|---|---|
@@ -19,6 +19,7 @@ OpenAPI runtime `/v3/api-docs` là hợp đồng machine-readable; Swagger `/swa
 | DELETE | /api/auctions/{id} | Chủ phiên, chưa có bid | 204, xóa phiên |
 | POST | /api/auctions/{id}/bids | Đăng nhập | 201, bid tay |
 | GET | /api/auctions/{id}/bids | Công khai | 200, lịch sử bid |
+| GET | /api/events | Công khai | 200, text/event-stream: auction-changed/resync/degraded/heartbeat |
 | GET | /api/users/me/bids | Đăng nhập | 200, bid của mình |
 | GET | /api/admin/users | ADMIN | 200, danh sách tài khoản |
 | DELETE | /api/admin/users/{id} | ADMIN | 204, xóa hẳn và tính lại phiên bị ảnh hưởng |
@@ -82,6 +83,8 @@ Trạng thái bid: WINNING/OUTBID/WON/LOST; xem schema chính xác trong Swagger
 409: trùng tài khoản, giá hoặc trạng thái không hợp lệ. Lỗi gồm timestamp, status,
 error, message, path; kiểm tra response hiện tại trong OpenAPI/test. 500 là lỗi ngoài dự kiến,
 không nên coi là xung đột bid bình thường.
+
+Nginx trả 429 khi vượt rate limit. API trả 503 kèm `Retry-After: 1` khi bão hòa hoặc chờ DB quá hạn. Không tự gửi lại POST khi chưa biết kết quả commit; đọc lại trạng thái/lịch sử trước. SSE chứa ID phiên, frontend GET lại dữ liệu; reconnect qua API khác vẫn đồng bộ snapshot. `/actuator/metrics` và `/actuator/prometheus` cần JWT ADMIN. Xem [Pha 2](PHA_2.md).
 
 Luồng thử: login seller → tạo phiên ACTIVE → login bidder1 đặt giá khởi điểm → bidder2
 đặt cao hơn → GET chi tiết/lịch sử → chờ hết giờ và Làm mới → kiểm tra ENDED/người thắng.

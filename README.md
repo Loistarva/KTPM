@@ -1,6 +1,6 @@
-# KTPM — Hệ thống đấu giá cơ bản
+# KTPM — Hệ thống đấu giá Pha 2
 
-Dự án đấu giá cơ bản cho Pha 1: backend REST API/JSON, frontend React, PostgreSQL và Docker. Pha 2 dùng cùng bộ kiểm thử tải để đánh giá các cải tiến kiến trúc.
+Dự án đấu giá dùng Spring Boot, React, PostgreSQL và Docker. Pha 2 bổ sung bid đồng thời bằng cập nhật có điều kiện, worker theo batch có lease, hai API sau Nginx, SSE/outbox, giới hạn tải và metrics. [Chi tiết thay đổi và cách kiểm chứng Pha 2](docs/PHA_2.md).
 
 ## 1. Các tính năng chính
 
@@ -10,7 +10,7 @@ Dự án đấu giá cơ bản cho Pha 1: backend REST API/JSON, frontend React,
 - Scheduler mở/kết thúc phiên; có bid thì xác định người thắng, không có bid thì FAILED.
 - Người bán xóa phiên chưa có bid; admin xóa hẳn tài khoản/phiên và tính lại kết quả liên quan.
 
-Bid đầu ít nhất bằng giá khởi điểm; bid sau ít nhất bằng giá hiện tại cộng bước giá. Không bid phiên của mình, khi đang dẫn đầu hoặc ngoài thời gian đấu giá. Giao diện cập nhật bằng thao tác/Làm mới/F5; không có realtime, polling, ví, thanh toán hay auto-bid.
+Bid đầu ít nhất bằng giá khởi điểm; bid sau ít nhất bằng giá hiện tại cộng bước giá. Không bid phiên của mình, khi đang dẫn đầu hoặc ngoài thời gian đấu giá. SSE tự cập nhật giá/trạng thái; reconnect đọc lại dữ liệu và fallback làm mới mỗi 10 giây khi mất kết nối. Không có ví, thanh toán hay auto-bid.
 
 ## 2. Kiến trúc hệ thống
 
@@ -21,30 +21,29 @@ flowchart TB
     Browser["Trình duyệt<br/>Người dùng / Admin"]
     Frontend["Frontend · localhost:5173<br/>Nginx phục vụ giao diện React"]
 
-    subgraph Backend["Backend Spring Boot · localhost:8080"]
-        API["API<br/>Controller"]
-        Business["Nghiệp vụ<br/>Application + Domain"]
-        Data["Truy cập dữ liệu<br/>Adapter JPA / Hibernate"]
-        Scheduler["Scheduler<br/>Mở / kết thúc phiên"]
-
-        API --> Business
-        Business -->|"Qua interface Store / UnitOfWork"| Data
-        Scheduler --> Business
+    subgraph Backend["Hai API Spring Boot · profile api"]
+        API["API 1 · localhost:8080"]
+        API2["API 2 · nội bộ"]
     end
-
-    DB[("PostgreSQL · localhost:5432<br/>users · auctions · bids")]
+    Worker["Worker riêng · profile worker<br/>Batch / lease / outbox relay"]
+    DB[("PostgreSQL · localhost:5432<br/>users · auctions · bids · auction_outbox")]
 
     Browser -->|"Trang web / thao tác"| Frontend
-    Frontend -->|"Proxy /api · REST / JSON"| API
+    Frontend -->|"least_conn · REST / SSE"| API
+    Frontend -->|"least_conn · REST / SSE"| API2
     Browser -.->|"Thử API bằng Swagger"| API
-    Data -->|"Đọc / ghi"| DB
+    API -->|"Đọc / ghi"| DB
+    API2 -->|"Đọc / ghi"| DB
+    Worker -->|"Claim / mở đóng phiên / NOTIFY"| DB
+    DB -.->|"LISTEN broadcast"| API
+    DB -.->|"LISTEN broadcast"| API2
 ```
 
 Sơ đồ mô tả cách chạy Docker với cổng mặc định. React chạy trong trình duyệt; Nginx phục vụ giao diện và proxy `/api`. Spring Security/JWT filter xử lý xác thực trước controller.
 
 [Xem giải thích kiến trúc](docs/KIEN_TRUC.md)
 
-**Backend:** Java 17+, Spring Boot, Spring Security, JPA/Hibernate, PostgreSQL 16.2, Flyway, OpenAPI. **Frontend:** React, TypeScript, Vite, React Router, TanStack Query; decimal.js/lossless-json xử lý số tiền. **Docker:** Nginx/frontend, backend và PostgreSQL.
+**Backend:** Java 17+, Spring Boot, Spring Security, JPA/JDBC, PostgreSQL 16.2, Flyway, OpenAPI, Actuator/Prometheus. **Frontend:** React, TypeScript, Vite, TanStack Query, EventSource; decimal.js/lossless-json xử lý tiền. **Docker:** Nginx/frontend, hai API, worker và PostgreSQL.
 
 | Tầng | Trách nhiệm |
 |---|---|
@@ -53,7 +52,7 @@ Sơ đồ mô tả cách chạy Docker với cổng mặc định. React chạy 
 | Domain | Model, luật nghiệp vụ và interface repository |
 | Infrastructure | JPA, transaction, JWT/filter và scheduler |
 
-Application/domain không import framework web hoặc thư viện DB. Adapter JPA triển khai repository; UnitOfWork giữ transaction. Bid khóa hàng phiên để ghi giá/lịch sử nhất quán. Scheduler thuộc auction, security thuộc auth.
+Application/domain không import framework web hoặc thư viện DB. Adapter JPA/JDBC triển khai repository; UnitOfWork giữ transaction. Bid so sánh giá/người dẫn đầu rồi cập nhật có điều kiện và retry giới hạn; ghi giá/lịch sử/outbox cùng transaction. Scheduler thuộc auction, SSE/outbox thuộc realtime, security thuộc auth.
 
 ### Cấu trúc mã nguồn
 
@@ -67,6 +66,7 @@ KTPM/
 │   │   ├── auction/              # Phiên, luật đấu giá và scheduler
 │   │   ├── bidding/              # Bid và lịch sử
 │   │   ├── admin/                # Quản lý/xóa dữ liệu
+│   │   ├── realtime/             # SSE, LISTEN và outbox relay
 │   │   └── common/               # Thành phần dùng chung
 │   ├── src/main/resources/
 │   │   ├── application.yml       # Cấu hình backend
@@ -101,7 +101,7 @@ KTPM/
 
 Backend tổ chức theo module nghiệp vụ; bên trong dùng `api`, `application`, `domain`, `infrastructure` theo nhu cầu. Chi tiết nằm trong [kiến trúc backend](docs/KIEN_TRUC_BACKEND.md) và [kiến trúc frontend](docs/KIEN_TRUC_FRONTEND.md).
 
-Database gồm `users`, `auctions`, `bids`; `flyway_schema_history` là bảng kỹ thuật. Không dùng H2; Swagger không có database riêng.
+Database gồm `users`, `auctions`, `bids`, outbox kỹ thuật `auction_outbox` và `flyway_schema_history`. Flyway V2 thêm index/lease/outbox vào DB cũ. Không dùng H2; Swagger không có database riêng.
 
 ## 3. Đặc tả API
 
@@ -120,13 +120,14 @@ Database gồm `users`, `auctions`, `bids`; `flyway_schema_history` là bảng k
 | DELETE | /api/auctions/{id} | Chủ phiên, chưa có bid | Xóa phiên |
 | POST | /api/auctions/{id}/bids | Có | Đặt giá |
 | GET | /api/auctions/{id}/bids | Không | Lịch sử bid |
+| GET | /api/events | Không | Luồng SSE thông báo thay đổi phiên |
 | GET | /api/users/me/bids | Có | Bid của mình |
 | GET | /api/admin/users | ADMIN | Danh sách tài khoản |
 | DELETE | /api/admin/users/{id} | ADMIN | Xóa tài khoản |
 | GET | /api/admin/auctions | ADMIN | Danh sách phiên |
 | DELETE | /api/admin/auctions/{id} | ADMIN | Xóa phiên và bid |
 
-Danh sách nhận `page` từ 0, `size` mặc định 20, tối đa 100; danh sách phiên có thêm `status`, `search`. DELETE thành công trả 204. Lỗi thường gặp: 400 đầu vào sai, 401 chưa xác thực, 403 sai quyền, 404 không tồn tại, 409 xung đột.
+Danh sách nhận `page` từ 0, `size` mặc định 20, tối đa 100; danh sách phiên có thêm `status`, `search`. DELETE thành công trả 204. Lỗi thường gặp: 400 đầu vào sai, 401 chưa xác thực, 403 sai quyền, 404 không tồn tại, 409 xung đột, 429 vượt rate limit Nginx, 503 hết sức chứa. Metrics/Prometheus yêu cầu ADMIN.
 
 ## 4. Bảo mật và xác thực
 
@@ -146,7 +147,7 @@ Cài/mở Docker Desktop với Linux containers, chạy tại gốc:
 docker compose up --build -d
 ```
 
-Mở **http://localhost:5173**. Lần sau bật bằng `docker compose up -d`; tắt bằng `docker compose down`. Không cần cài riêng Java, Node.js hay PostgreSQL. Cổng/cấu hình tùy chỉnh bằng `.env` theo `.env.example`.
+Mở **http://localhost:5173**. Compose chạy hai API sau Nginx và một worker độc lập. Lần sau bật bằng `docker compose up -d`; tắt bằng `docker compose down`. Không cần cài riêng Java, Node.js hay PostgreSQL. Cổng/pool/worker tùy chỉnh bằng `.env` theo `.env.example`; xem [Pha 2](docs/PHA_2.md) để mở rộng worker.
 
 ### Chạy trực tiếp trên Windows
 
@@ -178,7 +179,7 @@ Database Docker lưu trong volume; `down` giữ dữ liệu, **`down -v` xóa d�
 
 DBeaver: Docker mặc định `localhost:5432`, database/user `ktpm`, password `ktpm_dev`; portable `localhost:55432`, database/user `postgres`, mật khẩu trống.
 
-Nếu lỗi, kiểm tra backend tại http://localhost:8080/actuator/health. Docker xem log bằng `docker compose logs --tail=50 backend frontend`; bản trực tiếp kiểm tra hai terminal còn chạy.
+Nếu lỗi, kiểm tra backend tại http://localhost:8080/actuator/health. Docker xem log bằng `docker compose logs --tail=50 backend backend-replica worker frontend`; bản trực tiếp kiểm tra hai terminal còn chạy.
 
 ## 6. Kiểm thử tải trên Kaggle CPU
 
@@ -199,7 +200,7 @@ Backend, PostgreSQL và client phát tải chạy trong cùng phiên Kaggle CPU.
 
 Bộ **full gồm 15 kịch bản, 108 lượt đo/pha**, mỗi tổ hợp lặp 3 lần. Đo RPS tổng/thành công, p95/p99, lỗi/409, CPU/RAM, độ trễ scheduler và tính đúng của bid/giá/người thắng. HTTP 409 của bid được thống kê riêng, không tính là request thành công.
 
-**Chạy Pha 1:** xuất source tại thư mục gốc:
+**Chạy Pha 1:** dùng ZIP baseline đã lưu hoặc xuất tại checkout của Pha 1. Source hiện tại là Pha 2; không gán source này nhãn P1. Tại thư mục gốc checkout P1:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/export-kaggle.ps1
@@ -224,6 +225,7 @@ Kết quả tự xuất `comparison.csv` và `comparison.md`: median/min/max qua
 
 | Tài liệu | Dùng để làm gì |
 |---|---|
+| [Cải tiến Pha 2](docs/PHA_2.md) | Tám hướng cải tiến, cơ chế đồng thời, worker/lease, SSE/outbox, cấu hình và metrics |
 | [Cài đặt và chạy](docs/CAI_DAT_VA_CHAY.md) | Hướng dẫn người mới tải, cài và chạy bằng Docker hoặc trực tiếp trên Windows |
 | [Kiến trúc tổng quan](docs/KIEN_TRUC.md) | Sơ đồ frontend/backend/database, luồng request và cách triển khai |
 | [Luồng nghiệp vụ](docs/NGHIEP_VU.md) | Vai trò, vòng đời phiên, luật bid, xác định người thắng và xử lý xóa |

@@ -77,8 +77,4 @@ public class AuctionService {
           auctions.delete(id);
         });
   }
-
-  public List<Long> due(Instant now) {
-    return work.read(() -> auctions.findDue(now));
-  }
 }

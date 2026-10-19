@@ -22,7 +22,7 @@ Thay đường dẫn bằng nơi bạn giải nén. Chọn **một** cách bên 
 docker compose up --build -d
 ```
 
-Đợi tải/build xong rồi mở **http://localhost:5173**. Không cần cài Java, Node.js hay PostgreSQL riêng.
+Đợi tải/build xong rồi mở **http://localhost:5173**. Compose chạy PostgreSQL, hai API, worker riêng và Nginx/frontend. Không cần cài Java, Node.js hay PostgreSQL riêng. Chi tiết cấu hình và metrics xem [Pha 2](PHA_2.md).
 
 Lần sau bật lại: `docker compose up -d`. Khi sửa code: dùng lệnh có `--build`. Tắt: `docker compose down` — dữ liệu vẫn giữ. Không thêm `-v` nếu muốn giữ database.
 
@@ -56,7 +56,7 @@ npm.cmd run dev
 | bidder1 / bidder2 | Bidder123! |
 | admin | Admin123! |
 
-Seller tạo phiên; bidder đặt giá. Bấm **Làm mới/F5** để xem giá mới.
+Seller tạo phiên; bidder đặt giá. Giá/kết quả tự cập nhật qua SSE; nếu mất kết nối, giao diện tự làm mới dự phòng. Nút **Làm mới/F5** vẫn dùng được.
 
 Swagger thử API: **http://localhost:8080/swagger-ui/index.html**.
 

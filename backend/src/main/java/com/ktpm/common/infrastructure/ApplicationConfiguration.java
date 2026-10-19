@@ -6,6 +6,7 @@ import com.ktpm.auction.domain.*;
 import com.ktpm.auth.application.*;
 import com.ktpm.bidding.application.BiddingService;
 import com.ktpm.bidding.domain.BidStore;
+import com.ktpm.common.ContentionObserver;
 import com.ktpm.common.UnitOfWork;
 import com.ktpm.user.application.UserService;
 import com.ktpm.user.domain.UserStore;
@@ -30,19 +31,19 @@ public class ApplicationConfiguration {
 
   @Bean
   BiddingService biddingService(
-      AuctionService a,
       AuctionStore s,
       MaintenanceGate g,
       UserService u,
       BidStore b,
-      UnitOfWork w) {
-    return new BiddingService(a, s, g, u, b, w);
+      UnitOfWork w,
+      ContentionObserver c) {
+    return new BiddingService(s, g, u, b, w, c);
   }
 
   @Bean
   AuctionLifecycleService lifecycle(
-      AuctionService a, BiddingService b, MaintenanceGate g, AuctionStore s, UnitOfWork w) {
-    return new AuctionLifecycleService(a, b, g, s, w);
+      BiddingService b, MaintenanceGate g, AuctionStore s, UnitOfWork w) {
+    return new AuctionLifecycleService(b, g, s, w);
   }
 
   @Bean

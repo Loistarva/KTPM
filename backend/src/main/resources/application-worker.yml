@@ -1,0 +1,10 @@
+ktpm:
+  scheduler:
+    enabled: true
+  outbox:
+    enabled: true
+  realtime:
+    enabled: false
+  seed-enabled: false
+server:
+  port: ${PORT:8080}

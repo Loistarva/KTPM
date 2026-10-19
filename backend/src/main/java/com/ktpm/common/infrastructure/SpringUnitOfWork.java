@@ -2,6 +2,7 @@ package com.ktpm.common.infrastructure;
 
 import com.ktpm.common.UnitOfWork;
 import java.util.function.Supplier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.*;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -10,10 +11,14 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class SpringUnitOfWork implements UnitOfWork {
   private final TransactionTemplate reads, writes, mandatory;
 
-  public SpringUnitOfWork(PlatformTransactionManager manager) {
+  public SpringUnitOfWork(
+      PlatformTransactionManager manager,
+      @Value("${ktpm.transaction-timeout-seconds:8}") int timeout) {
     reads = new TransactionTemplate(manager);
     reads.setReadOnly(true);
     writes = new TransactionTemplate(manager);
+    reads.setTimeout(timeout);
+    writes.setTimeout(timeout);
     mandatory = new TransactionTemplate(manager);
     mandatory.setPropagationBehavior(TransactionDefinition.PROPAGATION_MANDATORY);
   }

@@ -1,10 +1,10 @@
 package com.ktpm.bidding.application;
 
-import com.ktpm.auction.application.AuctionService;
 import com.ktpm.auction.domain.*;
 import com.ktpm.bidding.application.BiddingModels.BidResponse;
 import com.ktpm.bidding.domain.*;
 import com.ktpm.common.*;
+import com.ktpm.common.ContentionObserver;
 import com.ktpm.user.application.UserService;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -12,24 +12,39 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BiddingService {
-  private final AuctionService auctions;
   private final AuctionStore auctionStore;
   private final MaintenanceGate maintenance;
   private final UserService users;
   private final BidStore bids;
   private final UnitOfWork work;
+  private final ContentionObserver contention;
 
   public BidResponse bid(Long id, Long user, BigDecimal amount) {
+    // Every retry opens a fresh transaction and rechecks the current price and deadline.
+    // Only a failed reservation is retried; an accepted bid is never replayed.
+    for (int attempt = 0; attempt < 16; attempt++) {
+      try {
+        return place(id, user, amount);
+      } catch (ReservationChanged e) {
+        contention.bidRetry();
+      }
+    }
+    throw BusinessException.conflict("Auction changed repeatedly; refresh and submit again");
+  }
+
+  private BidResponse place(Long id, Long user, BigDecimal amount) {
     return work.write(
         () -> {
           maintenance.shared();
-          Auction a = auctions.lock(id);
           users.requireExists(user);
+          Auction a =
+              auctionStore
+                  .findById(id)
+                  .orElseThrow(() -> BusinessException.missing("Auction not found"));
           AuctionRules.canBid(a, user, amount, Instant.now());
+          if (!auctionStore.reserveBid(a, user, amount)) throw new ReservationChanged();
           if (a.getWinningBidId() != null) {
-            Bid previous = bids.findById(a.getWinningBidId()).orElseThrow();
-            previous.setStatus("OUTBID");
-            bids.saveAndFlush(previous);
+            bids.outbid(a.getWinningBidId());
           }
           Bid b = new Bid();
           b.setAuctionId(id);
@@ -48,7 +63,7 @@ public class BiddingService {
     Pages.validate(page, size);
     return work.read(
         () -> {
-          auctions.get(id);
+          if (!auctionStore.existsById(id)) throw BusinessException.missing("Auction not found");
           return Pages.map(bids.history(id, page, size), BidResponse::from);
         });
   }
@@ -59,16 +74,12 @@ public class BiddingService {
   }
 
   public void close(Auction a, boolean success) {
-    work.mandatory(
-        () -> {
-          for (Bid b : bids.findByAuctionIdAndStatus(a.getId(), "WINNING")) {
-            b.setStatus(success ? "WON" : "LOST");
-            bids.saveAndFlush(b);
-          }
-          for (Bid b : bids.findByAuctionIdAndStatus(a.getId(), "OUTBID")) {
-            b.setStatus("LOST");
-            bids.saveAndFlush(b);
-          }
-        });
+    work.mandatory(() -> bids.closeAuction(a.getId(), success));
+  }
+
+  private static final class ReservationChanged extends RuntimeException {
+    private ReservationChanged() {
+      super(null, null, false, false);
+    }
   }
 }

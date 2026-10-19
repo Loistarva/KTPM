@@ -50,5 +50,7 @@ public abstract class DatabaseTest {
     r.add("ktpm.jwt.secret", () -> "ktpm-tests-secret-with-more-than-32-bytes-0123456789");
     r.add("ktpm.seed-enabled", () -> false);
     r.add("ktpm.scheduler.enabled", () -> false);
+    r.add("ktpm.outbox.enabled", () -> false);
+    r.add("ktpm.realtime.enabled", () -> false);
   }
 }

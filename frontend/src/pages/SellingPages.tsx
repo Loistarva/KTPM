@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { ArrowUpRight, Plus } from "lucide-react";
 import { useApi, useAction } from "../lib/queries";
 import { api } from "../lib/api";
 import {
@@ -35,7 +36,7 @@ export function SellingPage() {
         description="Bạn có thể xóa phiên chưa có lượt đặt giá."
       >
         <Link className="button" to="/selling/auctions/new">
-          Tạo phiên đấu giá
+          <Plus size={16} /> Tạo phiên đấu giá
         </Link>
         <button
           className="button secondary"
@@ -49,7 +50,14 @@ export function SellingPage() {
       ) : data.error ? (
         <ErrorBox error={data.error} />
       ) : !data.data?.content.length ? (
-        <Empty title="Bạn chưa có phiên nào" />
+        <Empty
+          title="Bạn chưa có phiên nào"
+          description="Món đồ của bạn có thể là điều ai đó đang tìm kiếm. Bắt đầu với phiên đấu giá đầu tiên."
+        >
+          <Link className="button" to="/selling/auctions/new">
+            Tạo phiên đầu tiên <ArrowUpRight size={16} />
+          </Link>
+        </Empty>
       ) : (
         <div className="table-wrap panel">
           <table>
@@ -160,9 +168,13 @@ export function AuctionFormPage() {
     <>
       <Heading
         title="Tạo phiên đấu giá"
+        eyebrow="MỞ RA MỘT CƠ HỘI MỚI"
         description="Nhập thông tin món hàng và giá trong một lần."
       />
       <form className="panel auction-form" onSubmit={submit}>
+        <h2 className="form-section-title">
+          <span>01</span> Thông tin món hàng
+        </h2>
         <Field label="Tên món hàng">
           <input
             required
@@ -197,6 +209,9 @@ export function AuctionFormPage() {
             onChange={change("imageUrl")}
           />
         </Field>
+        <h2 className="form-section-title">
+          <span>02</span> Mức giá & thời gian
+        </h2>
         <div className="form-grid">
           <Field label="Giá khởi điểm">
             <input
@@ -234,8 +249,9 @@ export function AuctionFormPage() {
           </Field>
         </div>
         {error && <ErrorBox error={error} />}
-        <button className="button" disabled={create.isPending}>
+        <button className="button full" disabled={create.isPending}>
           {create.isPending ? "Đang tạo…" : "Tạo phiên"}
+          <ArrowUpRight size={17} />
         </button>
       </form>
     </>

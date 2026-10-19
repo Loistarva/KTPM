@@ -29,6 +29,8 @@ public final class AuctionRules {
       throw BusinessException.conflict("Auction is not active");
     if (a.getSellerId().equals(userId))
       throw BusinessException.forbidden("Cannot bid on your own auction");
+    if (userId.equals(a.getWinnerUserId()))
+      throw BusinessException.conflict("You are already the highest bidder");
     if (amount == null || amount.compareTo(minimum(a)) < 0)
       throw BusinessException.conflict("Minimum allowed bid is " + minimum(a));
   }

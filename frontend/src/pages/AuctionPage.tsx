@@ -1,9 +1,20 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { RefreshCw } from "lucide-react";
+import {
+  RefreshCw,
+  ArrowLeft,
+  ArrowUpRight,
+  ChevronRight,
+  Clock3,
+  ShieldCheck,
+  UserRound,
+  Trophy,
+  Gavel,
+} from "lucide-react";
 import { useAuth } from "../context";
 import { api } from "../lib/api";
 import { useApi, useAction } from "../lib/queries";
+import { useRealtimeStatus } from "../lib/realtime";
 import {
   minimumBid,
   money,
@@ -21,6 +32,8 @@ import {
   Heading,
   Pager,
   Empty,
+  Countdown,
+  labels,
 } from "../components";
 import type { Auction, Bid, Page } from "../types";
 export function AuctionPage() {
@@ -28,6 +41,7 @@ export function AuctionPage() {
   const [params, setParams] = useSearchParams();
   const page = Math.max(0, Number(params.get("page")) || 0);
   const auth = useAuth();
+  const realtime = useRealtimeStatus();
   const data = useApi<Auction>(`/api/auctions/${id}`);
   const history = useApi<Page<Bid>>(
     `/api/auctions/${id}/bids?page=${page}&size=20`,
@@ -59,6 +73,7 @@ export function AuctionPage() {
   const expired = now >= Date.parse(a.endingTime);
   const active = a.status === "ACTIVE" && !expired;
   const owner = sameId(auth.user?.id, a.sellerId);
+  const leader = sameId(auth.user?.id, a.winnerUserId);
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (mutation.isPending) return;
@@ -78,6 +93,13 @@ export function AuctionPage() {
   }
   return (
     <>
+      <nav className="breadcrumbs" aria-label="Đường dẫn">
+        <Link to="/auctions">
+          <ArrowLeft size={14} /> Khám phá
+        </Link>
+        <ChevronRight size={13} />
+        <span>Phiên #{a.id}</span>
+      </nav>
       <Heading eyebrow={`PHIÊN #${a.id}`} title={a.name}>
         <button
           className="button secondary"
@@ -90,20 +112,68 @@ export function AuctionPage() {
           Làm mới
         </button>
       </Heading>
+      <p
+        className={
+          "realtime-indicator " + (realtime ? "connected" : "reconnecting")
+        }
+        role="status"
+      >
+        <span className="live-dot" />
+        {realtime
+          ? "Đang cập nhật trực tiếp"
+          : "Đang kết nối lại · tự động làm mới mỗi 10 giây"}
+      </p>
       <div className="detail-grid">
-        <section className="panel">
-          <AuctionImage auction={a} className="detail-image" />
-          <h2>Thông tin món hàng</h2>
-          <p className="description">{a.description}</p>
-          <p>Tình trạng: {a.condition}</p>
-          <p>Người bán: #{a.sellerId}</p>
+        <section className="product-column">
+          <div className="product-gallery">
+            <AuctionImage auction={a} className="detail-image" />
+            <span className="gallery-label">
+              {labels[a.condition] || a.condition}
+            </span>
+          </div>
+          <div className="panel product-description">
+            <p className="eyebrow">TÌM HIỂU TRƯỚC KHI ĐẶT GIÁ</p>
+            <h2>Thông tin món hàng</h2>
+            <p className="description">{a.description}</p>
+            <div className="product-metadata">
+              <span>
+                <ShieldCheck size={15} /> {labels[a.condition] || a.condition}
+              </span>
+              <span>
+                <UserRound size={15} /> Người bán: #{a.sellerId}
+              </span>
+            </div>
+          </div>
         </section>
-        <section className="panel">
-          <Status value={a.status} />
-          <p className="muted">Giá hiện tại</p>
-          <h2 className="large-price" data-testid="auction-price">
-            {money(a.currentPrice)}
-          </h2>
+        <section className="panel bid-panel">
+          <div className="bid-panel-heading">
+            <span className="eyebrow">
+              <Gavel size={15} /> ĐẤU GIÁ TRỰC TIẾP
+            </span>
+            <Status value={a.status} />
+          </div>
+          <div className="bid-price-block">
+            <p className="muted">Giá hiện tại</p>
+            <h2 className="large-price" data-testid="auction-price">
+              {money(a.currentPrice)}
+            </h2>
+            {a.winnerUserId != null && a.status === "ACTIVE" && (
+              <span className="leader-label">
+                <UserRound size={13} /> Đang dẫn đầu: #{a.winnerUserId}
+              </span>
+            )}
+          </div>
+          {["ACTIVE", "SCHEDULED"].includes(a.status) && !expired && (
+            <div className="countdown-panel">
+              <p>
+                <Clock3 size={14} />{" "}
+                {a.status === "SCHEDULED" ? "Bắt đầu sau" : "Thời gian còn lại"}
+              </p>
+              <Countdown
+                until={a.status === "SCHEDULED" ? a.startingTime : a.endingTime}
+              />
+            </div>
+          )}
           <dl className="facts">
             <dt>Giá khởi điểm</dt>
             <dd>{money(a.startingPrice)}</dd>
@@ -116,31 +186,39 @@ export function AuctionPage() {
           </dl>
           {a.status === "ENDED" ? (
             <div className="result-box">
+              <Trophy size={24} />
               <h3>Người thắng: #{a.winnerUserId}</h3>
               <p>Giá cuối: {money(a.finalPrice)}</p>
             </div>
           ) : a.status === "FAILED" ? (
-            <p>Phiên kết thúc không có người thắng.</p>
+            <p className="auction-note">Phiên kết thúc không có người thắng.</p>
           ) : (
-            <p>
+            <p className="auction-note">
               {expired
-                ? "Đã hết giờ. Làm mới để xem kết quả."
+                ? "Đã hết giờ. Đang chờ kết quả tự động cập nhật."
                 : a.status === "SCHEDULED"
                   ? "Phiên chưa bắt đầu."
-                  : `Còn ${Math.max(0, Math.ceil((Date.parse(a.endingTime) - now) / 1000))} giây`}
+                  : "Giá và kết quả được cập nhật theo thời gian thực."}
             </p>
           )}
-          {a.winnerUserId != null && a.status === "ACTIVE" && (
-            <p>Đang dẫn đầu: #{a.winnerUserId}</p>
-          )}
           {!auth.user ? (
-            <Link className="button" to={`/login?returnTo=/auctions/${a.id}`}>
-              Đăng nhập để đặt giá
+            <Link
+              className="button full"
+              to={`/login?returnTo=/auctions/${a.id}`}
+            >
+              Đăng nhập để đặt giá <ArrowUpRight size={17} />
             </Link>
           ) : owner ? (
-            <p>Bạn không thể đặt giá phiên của mình.</p>
+            <p className="owner-note">
+              <ShieldCheck size={17} /> Bạn không thể đặt giá phiên của mình.
+            </p>
           ) : active ? (
-            <form onSubmit={submit}>
+            <form className="bid-form" onSubmit={submit}>
+              {leader && (
+                <p className="leader-note">
+                  <Trophy size={16} /> Bạn đang dẫn đầu phiên này.
+                </p>
+              )}
               <Field
                 label="Giá đặt"
                 hint={`Tối thiểu ${money(minimumBid(a).toString())}`}
@@ -148,27 +226,63 @@ export function AuctionPage() {
               >
                 <input
                   value={amount}
+                  className="bid-amount-input"
+                  placeholder="Nhập mức giá của bạn"
+                  disabled={leader}
                   onChange={(e) => setAmount(e.target.value)}
                   inputMode="decimal"
                   required
                   maxLength={20}
                 />
               </Field>
+              <div className="quick-bids" aria-label="Gợi ý mức giá">
+                {[0, 1, 5].map((steps) => (
+                  <button
+                    type="button"
+                    key={steps}
+                    disabled={leader || mutation.isPending}
+                    onClick={() => {
+                      setAmount(
+                        minimumBid(a)
+                          .plus(dec(a.minimumBidStep).times(steps))
+                          .toString(),
+                      );
+                      setError("");
+                    }}
+                  >
+                    {steps === 0 ? "Giá tối thiểu" : `+${steps} bước giá`}
+                  </button>
+                ))}
+              </div>
               <button
-                className="button"
-                disabled={mutation.isPending}
+                className="button full bid-submit"
+                disabled={mutation.isPending || leader}
                 onClick={(e) => {
                   if (e.detail > 1) e.preventDefault();
                 }}
               >
                 {mutation.isPending ? "Đang gửi…" : "Đặt giá"}
+                <ArrowUpRight size={18} />
               </button>
             </form>
           ) : null}
+          <p className="bid-assurance">
+            <ShieldCheck size={13} /> Lịch sử công khai · Kết quả minh bạch
+          </p>
         </section>
       </div>
-      <section className="panel">
-        <h2>Lịch sử đặt giá</h2>
+      <section className="panel bid-history">
+        <div className="history-heading">
+          <div>
+            <p className="eyebrow">DIỄN BIẾN CỦA PHIÊN</p>
+            <h2>Lịch sử đặt giá</h2>
+          </div>
+          {history.data && (
+            <span className="count-badge">
+              {history.data.totalElements} lượt đặt giá
+            </span>
+          )}
+        </div>
         {history.isLoading ? (
           <Loading />
         ) : history.error ? (
@@ -188,9 +302,14 @@ export function AuctionPage() {
               </thead>
               <tbody>
                 {history.data.content.map((b) => (
-                  <tr key={String(b.id)}>
+                  <tr
+                    key={String(b.id)}
+                    className={
+                      ["WINNING", "WON"].includes(b.status) ? "winning-row" : ""
+                    }
+                  >
                     <td>#{b.bidderId}</td>
-                    <td>{money(b.amount)}</td>
+                    <td className="bid-history-amount">{money(b.amount)}</td>
                     <td>
                       <Status value={b.status} />
                     </td>

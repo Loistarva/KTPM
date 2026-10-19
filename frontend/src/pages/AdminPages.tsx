@@ -1,4 +1,5 @@
 import { Link, NavLink, Outlet, useSearchParams } from "react-router-dom";
+import { UsersRound, Gavel, ArrowUpRight } from "lucide-react";
 import { useAuth } from "../context";
 import { api } from "../lib/api";
 import { useApi, useAction } from "../lib/queries";
@@ -17,9 +18,9 @@ export function AdminLayout() {
   return (
     <>
       <Heading
-        eyebrow="ADMIN"
-        title="Dọn dữ liệu thử"
-        description="Xóa hẳn dữ liệu; thao tác không thể hoàn tác."
+        eyebrow="KHÔNG GIAN QUẢN TRỊ"
+        title="Quản lý hệ thống"
+        description="Quản lý tài khoản và phiên đấu giá. Thao tác xóa dữ liệu không thể hoàn tác."
       />
       <nav className="tabs">
         <NavLink to="/admin/users">Tài khoản</NavLink>
@@ -30,13 +31,42 @@ export function AdminLayout() {
   );
 }
 export function AdminHome() {
+  const users = useApi<Page<Profile>>("/api/admin/users?page=0&size=1");
+  const auctions = useApi<Page<Auction>>("/api/admin/auctions?page=0&size=1");
   return (
-    <div className="panel">
-      <p>Chọn tài khoản hoặc phiên để dọn dữ liệu thử.</p>
-      <Link className="button" to="/admin/auctions">
-        Xem phiên
-      </Link>
-    </div>
+    <>
+      {users.error && (
+        <ErrorBox error={users.error} retry={() => void users.refetch()} />
+      )}
+      {auctions.error && (
+        <ErrorBox
+          error={auctions.error}
+          retry={() => void auctions.refetch()}
+        />
+      )}
+      <div className="admin-overview">
+        <article className="admin-stat">
+          <UsersRound size={24} />
+          <div>
+            <strong>{users.data?.totalElements ?? "—"}</strong>
+            <span>Tài khoản trên hệ thống</span>
+            <Link to="/admin/users">
+              Quản lý tài khoản <ArrowUpRight size={14} />
+            </Link>
+          </div>
+        </article>
+        <article className="admin-stat">
+          <Gavel size={24} />
+          <div>
+            <strong>{auctions.data?.totalElements ?? "—"}</strong>
+            <span>Phiên đấu giá được tạo</span>
+            <Link to="/admin/auctions">
+              Quản lý phiên <ArrowUpRight size={14} />
+            </Link>
+          </div>
+        </article>
+      </div>
+    </>
   );
 }
 export function AdminUsers() {

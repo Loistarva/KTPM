@@ -1,5 +1,7 @@
 # Bộ kiểm thử tải chung Pha 1 / Pha 2 — Kaggle CPU
 
+Source hiện tại là **Pha 2**. Các bước xuất/chạy P1 bên dưới áp dụng cho checkout/ZIP baseline P1 đã lưu. Xuất source hiện tại bằng tên `ktpm-p2-source.zip` theo mục so sánh P2; không dùng lại nhãn P1 cho source mới. Xem [cải tiến Pha 2](PHA_2.md).
+
 ## 1. Mục tiêu và phạm vi
 
 Đo **hiệu năng, khả năng xử lý tải, sử dụng tài nguyên và tính đúng dữ liệu** của backend đấu giá. Giữ nguyên bộ đo cho hai pha để biết cải tiến có tác dụng ở đâu. Frontend không nằm trong phép đo; client gọi REST trực tiếp, bỏ qua độ trễ Internet.

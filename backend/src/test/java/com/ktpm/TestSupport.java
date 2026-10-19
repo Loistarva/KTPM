@@ -37,7 +37,7 @@ public abstract class TestSupport extends DatabaseTest {
 
   @BeforeEach
   void reset() {
-    jdbc.execute("TRUNCATE bids,auctions,users RESTART IDENTITY CASCADE");
+    jdbc.execute("TRUNCATE auction_outbox,bids,auctions,users RESTART IDENTITY CASCADE");
   }
 
   protected Profile account() {

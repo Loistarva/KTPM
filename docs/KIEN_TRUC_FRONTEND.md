@@ -31,6 +31,7 @@ Các trang dùng thêm `components.tsx`, `types.ts` và `lib/money.ts`. Sơ đ�
 | src/context.tsx | AuthProvider, NoticeProvider; nạp danh tính, login/logout, thông báo |
 | src/lib/api.ts | Client HTTP dùng chung, Bearer token, parse JSON, ApiError |
 | src/lib/queries.ts | useApi/useAction; retry GET, mutation và invalidation |
+| src/lib/realtime.tsx | EventSource, gom invalidation, reconnect và làm mới dự phòng |
 | src/lib/money.ts | Decimal, kiểm tra/định dạng tiền, so ID, xử lý thời gian |
 | src/types.ts | Hợp đồng TypeScript của User/Auction/Bid/Page/Token |
 | src/styles.css | Giao diện và responsive cho màn hình nhỏ |
@@ -60,9 +61,9 @@ Cache bị xóa khi đổi tài khoản hoặc logout. sessionStorage thuộc ph
 
 ## 6. Cách cập nhật dữ liệu
 
-Query key là đường dẫn API (gồm query string); staleTime = 10 giây. **staleTime không phải chu kỳ gọi API**. Tắt refetch khi focus cửa sổ và khi reconnect; không cấu hình polling/WebSocket/SSE.
+Query key là đường dẫn API (gồm query string); staleTime = 2 giây. **staleTime không phải chu kỳ gọi API**. RealtimeProvider mở một EventSource tới `/api/events`, gom sự kiện trong 150 ms rồi invalidate các chi tiết/lịch sử liên quan và danh sách.
 
-Dữ liệu được lấy khi mở màn hình/query được dùng, chuyển tham số tìm/lọc/phân trang, nhấn Làm mới/F5 hoặc invalidation sau thao tác. Mutation thành công invalidate các query; 404/409 cũng invalidate để cập nhật trạng thái. GET có thể retry một lần với lỗi kết nối/5xx; mutation không tự retry để tránh gửi lặp thao tác ghi.
+Dữ liệu được lấy khi mở màn hình/query được dùng, chuyển tham số, Làm mới/F5 hoặc invalidation sau thao tác/sự kiện. Khi reconnect SSE, frontend đọc lại trạng thái REST; mất stream/LISTEN thì làm mới mỗi 10 giây, có refresh khi focus/online. Mutation thành công hoặc 404/409 cũng invalidate. GET có thể retry một lần với lỗi kết nối/5xx; mutation không tự retry. Giao diện hiển thị trạng thái kết nối và khóa nhập bid khi đang dẫn đầu. Xem [Pha 2](PHA_2.md).
 
 ## 7. Tiền và thời gian
 
@@ -80,6 +81,6 @@ npm.cmd run build
 npm.cmd test
 ```
 
-Vite dev cổng 5173, proxy `/api` mặc định tới localhost:8080; chỉnh bằng `BACKEND_PROXY_TARGET`. `VITE_API_BASE_URL` dùng khi client cần base URL khác, được đưa vào bundle lúc build và không dùng để chứa secret. Docker dùng Nginx cổng container 80, ánh xạ host 5173 và proxy tới backend:8080; fallback index.html hỗ trợ tải thẳng route SPA.
+Vite dev cổng 5173, proxy `/api` mặc định tới localhost:8080; chỉnh bằng `BACKEND_PROXY_TARGET`. `VITE_API_BASE_URL` được đưa vào bundle lúc build. Docker dùng Nginx cổng 80, ánh xạ host 5173, cân bằng tải tới hai API; route SSE tắt buffering, route bid/login có rate limit. Fallback index.html hỗ trợ tải thẳng route SPA.
 
 Playwright: `npm.cmd run test:e2e`; xem [playwright.config.ts](../frontend/playwright.config.ts) để cấu hình môi trường chạy. Xem [cài đặt](CAI_DAT_VA_CHAY.md), [API](API.md) và [kiến trúc tổng quan](KIEN_TRUC.md).

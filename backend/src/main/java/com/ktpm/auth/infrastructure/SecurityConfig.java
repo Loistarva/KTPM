@@ -5,6 +5,7 @@ import com.ktpm.auth.application.*;
 import com.ktpm.common.ApiExceptionHandler;
 import jakarta.servlet.http.*;
 import java.util.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.*;
@@ -34,11 +35,15 @@ public class SecurityConfig {
   }
 
   @Bean
-  SecurityFilterChain chain(HttpSecurity http, JwtAuthenticationFilter jwt, ObjectMapper json)
+  SecurityFilterChain chain(
+      HttpSecurity http,
+      JwtAuthenticationFilter jwt,
+      ObjectMapper json,
+      @Qualifier("cors") CorsConfigurationSource cors)
       throws Exception {
     return http.csrf(c -> c.disable())
         .logout(c -> c.disable())
-        .cors(c -> {})
+        .cors(c -> c.configurationSource(cors))
         .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             a ->
@@ -50,6 +55,12 @@ public class SecurityConfig {
                         "/v3/api-docs/**",
                         "/actuator/health")
                     .permitAll()
+                    .dispatcherTypeMatchers(jakarta.servlet.DispatcherType.ASYNC)
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/events")
+                    .permitAll()
+                    .requestMatchers("/actuator/**")
+                    .hasRole("ADMIN")
                     .requestMatchers("/api/admin/**")
                     .hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/api/auctions/me")

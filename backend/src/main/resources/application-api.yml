@@ -1,0 +1,6 @@
+ktpm:
+  scheduler:
+    enabled: false
+  outbox:
+    enabled: false
+  seed-enabled: false

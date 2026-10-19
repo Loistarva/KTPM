@@ -12,4 +12,5 @@ FROM nginx:stable-alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 ENV BACKEND_UPSTREAM=backend:8080
+ENV BACKEND_SECONDARY_UPSTREAM=backend:8080
 EXPOSE 80

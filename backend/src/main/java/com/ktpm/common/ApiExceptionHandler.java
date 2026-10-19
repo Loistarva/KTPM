@@ -24,7 +24,7 @@ public class ApiExceptionHandler {
   @ExceptionHandler(BusinessException.class)
   ResponseEntity<ErrorBody> business(BusinessException e, HttpServletRequest r) {
     if (r.getRequestURI().endsWith("/bids")) {
-      log.warn("Bid operation rejected at {}: {}", r.getRequestURI(), e.getMessage());
+      log.debug("Bid operation rejected at {}: {}", r.getRequestURI(), e.getMessage());
     }
     return ResponseEntity.status(e.status.value())
         .body(body(HttpStatus.valueOf(e.status.value()), e.getMessage(), r.getRequestURI()));
@@ -71,13 +71,31 @@ public class ApiExceptionHandler {
         .body(body(HttpStatus.FORBIDDEN, "Access denied", r.getRequestURI()));
   }
 
+  @ExceptionHandler({
+    org.springframework.jdbc.CannotGetJdbcConnectionException.class,
+    org.springframework.transaction.CannotCreateTransactionException.class,
+    org.springframework.transaction.TransactionTimedOutException.class,
+    QueryTimeoutException.class
+  })
+  ResponseEntity<ErrorBody> overloaded(Exception e, HttpServletRequest r) {
+    return ResponseEntity.status(503)
+        .header("Retry-After", "1")
+        .body(
+            body(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                "Database is busy; retry shortly",
+                r.getRequestURI()));
+  }
+
   @ExceptionHandler(Exception.class)
   ResponseEntity<ErrorBody> unexpected(Exception e, HttpServletRequest r) {
     if (e instanceof org.springframework.web.ErrorResponse frameworkError) {
       HttpStatus status = HttpStatus.resolve(frameworkError.getStatusCode().value());
-      if (status != null && status.is4xxClientError()) {
-        return ResponseEntity.status(status)
-            .body(body(status, frameworkError.getBody().getDetail(), r.getRequestURI()));
+      if (status != null
+          && (status.is4xxClientError() || status == HttpStatus.SERVICE_UNAVAILABLE)) {
+        var response = ResponseEntity.status(status);
+        if (status == HttpStatus.SERVICE_UNAVAILABLE) response.header("Retry-After", "1");
+        return response.body(body(status, frameworkError.getBody().getDetail(), r.getRequestURI()));
       }
     }
     log.error("Unexpected error at {}", r.getRequestURI(), e);

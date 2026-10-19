@@ -28,6 +28,14 @@ public class JpaBidStore implements BidStore {
     for (Bid b : bids) saveAndFlush(b);
   }
 
+  public void outbid(Long bidId) {
+    repo.outbid(bidId);
+  }
+
+  public void closeAuction(Long auctionId, boolean success) {
+    repo.closeAuction(auctionId, success ? "WON" : "LOST");
+  }
+
   public long count() {
     return repo.count();
   }

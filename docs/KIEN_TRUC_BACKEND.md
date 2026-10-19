@@ -10,6 +10,7 @@ Backend là một ứng dụng Spring Boot, đóng gói một JAR. Source nằm 
 | user | Model/Store tài khoản, kiểm tra tồn tại và DTO danh tính |
 | auction | Tạo/xem/xóa phiên, luật đấu giá, vòng đời và scheduler |
 | bidding | Ghi bid, lịch sử, bid cá nhân và trạng thái thắng/thua |
+| realtime | Outbox relay, PostgreSQL LISTEN và phát SSE đến người xem |
 | admin | Danh sách tài khoản/phiên, xóa và tính lại kết quả |
 | common | BusinessException, Pages, UnitOfWork, mapping, cấu hình và xử lý lỗi |
 
@@ -47,21 +48,21 @@ API validation xử lý kiểu/độ dài/giá đầu vào; luật nghiệp vụ
 Luồng bid trong một transaction ghi:
 
 1. Lấy advisory lock dùng chung cho thao tác đấu giá.
-2. Khóa hàng phiên, kiểm tra người dùng/thời gian/quyền/giá.
-3. Đổi bid dẫn đầu cũ thành OUTBID, ghi bid mới WINNING.
-4. Cập nhật currentPrice/winnerUserId/winningBidId rồi commit.
+2. Kiểm tra người dùng, đọc snapshot phiên và kiểm tra thời gian/quyền/giá.
+3. UPDATE có điều kiện theo giá/winningBidId vừa đọc, kiểm tra deadline sau khi lấy khóa. Nếu snapshot cũ, rollback rồi đọc lại, tối đa 16 lần.
+4. Bulk UPDATE bid cũ thành OUTBID, ghi bid mới WINNING; cập nhật giá/winnerUserId/winningBidId và outbox rồi commit.
 
-Khóa hàng phiên serialize ghi trên cùng phiên; phiên khác có thể xử lý đồng thời. Unique index WINNING bổ sung bảo vệ dữ liệu. `MaintenanceLock` dùng `pg_advisory_xact_lock_shared(7312026)` cho ghi thông thường và lock độc quyền cùng key khi admin xóa. Lock theo transaction, giải phóng khi commit/rollback; service truy cập qua interface MaintenanceGate.
+UPDATE vẫn khóa hàng để giữ nhất quán nhưng phần đọc/kiểm tra ban đầu không giữ khóa ghi. Unique index WINNING bổ sung bảo vệ dữ liệu. `MaintenanceLock` dùng `pg_advisory_xact_lock_shared(7312026)` cho ghi thông thường và lock độc quyền cùng key khi admin xóa. Lock theo transaction, giải phóng khi commit/rollback; service truy cập qua interface MaintenanceGate.
 
 Admin xóa user tính lại các phiên còn tồn tại dựa trên bid còn lại. Việc này cùng transaction với xóa; cascade FK và tính lại nghiệp vụ có vai trò khác nhau. Xem [database](DATABASE.md).
 
 ## 5. Scheduler
 
-`auction/infrastructure/AuctionScheduler` gọi tick lúc ApplicationReadyEvent và bằng `@Scheduled(fixedDelay...)`, mặc định chờ 5 giây sau lượt hoàn tất. Tick lấy một mốc now, tìm phiên đến hạn rồi duyệt tuần tự; mỗi phiên gọi AuctionLifecycleService trong transaction riêng. Lỗi một phiên được log và thử lại ở lượt tiếp theo.
+`auction/infrastructure/AuctionScheduler` gọi tick lúc ApplicationReadyEvent và mỗi 500 ms. `AuctionJobQueue` claim một batch giới hạn bằng SKIP LOCKED, ghi lease/token trong PostgreSQL. Pool mặc định 4 thread/64 job đang chạy hoặc chờ; mỗi phiên có transaction riêng, kiểm tra token sau khi lấy khóa. Lỗi có backoff 2–60 giây; lease hết hạn cho phép worker khác nhận lại.
 
 SCHEDULED được mở khi đến giờ; ACTIVE được đóng khi hết giờ. Phiên có bid thành ENDED, ghi finalPrice và WON/LOST; không có bid thành FAILED. Nếu scheduler chạy muộn vượt cả giờ bắt đầu/kết thúc, một lần advance có thể mở rồi đóng ngay. Bid vẫn kiểm tra endingTime trực tiếp, không chờ scheduler đổi trạng thái mới từ chối bid muộn.
 
-Đây là cơ chế đơn giản cho Pha 1: quét theo lịch, xử lý tuần tự. Kết quả độ trễ và hướng cải tiến nằm trong [báo cáo Kaggle](../reports/kaggle-p1-60e076a7/BAO_CAO_PHA1.md).
+Profile `api` tắt scheduler/relay; profile `worker` xử lý vòng đời/outbox và tắt SSE. Trigger ghi outbox cùng transaction; relay NOTIFY sau commit, mỗi API LISTEN riêng và chuyển thành SSE. Xem [Pha 2](PHA_2.md) cho fencing, reconnect, giới hạn và metrics. [Báo cáo Kaggle Pha 1](../reports/kaggle-p1-60e076a7/BAO_CAO_PHA1.md) là số liệu baseline.
 
 ## 6. Schema, cấu hình và triển khai
 

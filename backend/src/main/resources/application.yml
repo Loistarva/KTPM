@@ -5,6 +5,12 @@ spring:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ktpm}
     username: ${DATABASE_USERNAME:ktpm}
     password: ${DATABASE_PASSWORD:ktpm_dev}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:12}
+      minimum-idle: 2
+      connection-timeout: 2000
+      validation-timeout: 1000
+      connection-init-sql: SET lock_timeout='2s'; SET statement_timeout='5s'; SET idle_in_transaction_session_timeout='10s'
   jpa:
     open-in-view: false
     hibernate:
@@ -15,8 +21,20 @@ spring:
     enabled: true
   jackson:
     time-zone: UTC
+  task:
+    scheduling:
+      pool:
+        size: 3
 server:
   port: ${PORT:8080}
+  tomcat:
+    threads:
+      max: ${HTTP_THREADS:64}
+      min-spare: 8
+    accept-count: 64
+    max-connections: 512
+    connection-timeout: 5s
+    keep-alive-timeout: 20s
   error:
     include-message: never
     include-stacktrace: never
@@ -27,8 +45,21 @@ ktpm:
   cors-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:5173,http://localhost:8080}
   seed-enabled: false
   scheduler:
-    enabled: true
-    delay-ms: 5000
+    enabled: ${SCHEDULER_ENABLED:true}
+    delay-ms: ${SCHEDULER_DELAY_MS:500}
+    workers: ${SCHEDULER_WORKERS:4}
+    batch-size: ${SCHEDULER_BATCH_SIZE:64}
+    lease-seconds: 60
+  outbox:
+    enabled: ${OUTBOX_ENABLED:true}
+    delay-ms: 250
+    batch-size: 100
+    retention-hours: 24
+  realtime:
+    enabled: ${REALTIME_ENABLED:true}
+    max-clients: ${SSE_MAX_CLIENTS:200}
+  admission:
+    max-concurrent: ${API_MAX_CONCURRENT:48}
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -37,7 +68,12 @@ management:
   endpoints:
     web:
       exposure:
-        include: health
+        include: health,metrics,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+        ktpm.bid.reserve: true
   endpoint:
     health:
       show-details: never

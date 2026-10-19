@@ -131,7 +131,6 @@ test("GUI register/create one-image auction/manual bids/final result", async ({
       { amount: "110" },
       rival.token,
     );
-    await bidder.getByRole("button", { name: "Làm mới", exact: true }).click();
     await expect(bidder.getByTestId("auction-price")).toHaveText("110 ₫");
     await bid(bidder, "120");
     await expect
@@ -139,7 +138,6 @@ test("GUI register/create one-image auction/manual bids/final result", async ({
         timeout: 50000,
       })
       .toBe("ENDED");
-    await bidder.getByRole("button", { name: "Làm mới", exact: true }).click();
     await expect(
       bidder.getByText(`Người thắng: #${user.id}`, { exact: true }),
     ).toBeVisible();
@@ -152,42 +150,46 @@ test("GUI register/create one-image auction/manual bids/final result", async ({
     await ctx.close();
   }
 });
-test("manual refresh only and real conflict retains input", async ({
+test("realtime updates and a concurrent conflict retains input without replaying bid", async ({
   page,
   request,
 }) => {
   const seller = await account(request),
     user = await account(request),
     rival = await account(request);
-  const a = await create(request, seller, "Manual refresh");
+  const a = await create(request, seller, "Realtime refresh");
+  const third = await account(request);
   await login(page, user.username);
   await page.goto(`/auctions/${a.id}`);
   await expect(page.getByTestId("auction-price")).toHaveText("100 ₫");
-  let gets = 0;
-  page.on("request", (r) => {
-    if (r.method() === "GET" && r.url().includes(`/api/auctions/${a.id}`))
-      gets++;
-  });
   await call(
     request,
     `/api/auctions/${a.id}/bids`,
     "POST",
-    { amount: "150" },
+    { amount: "110" },
     rival.token,
   );
-  await page.waitForTimeout(6500);
-  await page.evaluate(() => {
-    window.dispatchEvent(new Event("focus"));
-    window.dispatchEvent(new Event("online"));
+  await expect(page.getByTestId("auction-price")).toHaveText("110 ₫");
+  let posts = 0;
+  await page.route(`**/api/auctions/${a.id}/bids`, async (route) => {
+    if (route.request().method() === "POST") {
+      posts++;
+      await call(
+        request,
+        `/api/auctions/${a.id}/bids`,
+        "POST",
+        { amount: "150" },
+        third.token,
+      );
+    }
+    await route.continue();
   });
-  await page.waitForTimeout(1000);
-  expect(gets).toBe(0);
-  await expect(page.getByTestId("auction-price")).toHaveText("100 ₫");
-  await page.getByLabel("Giá đặt", { exact: true }).fill("100");
+  await page.getByLabel("Giá đặt", { exact: true }).fill("120");
   await page.getByRole("button", { name: "Đặt giá", exact: true }).click();
-  await expect(page.getByLabel("Giá đặt", { exact: true })).toHaveValue("100");
+  await expect(page.getByLabel("Giá đặt", { exact: true })).toHaveValue("120");
   await expect(page.getByText(/Minimum allowed bid/)).toBeVisible();
   await expect(page.getByTestId("auction-price")).toHaveText("150 ₫");
+  expect(posts).toBe(1);
 });
 test("admin hard-delete user recalculates result and revokes token", async ({
   page,
@@ -334,7 +336,6 @@ test("scheduled auction becomes failed without bids", async ({
       timeout: 20000,
     })
     .toBe("FAILED");
-  await page.getByRole("button", { name: "Làm mới", exact: true }).click();
   await expect(
     page.getByText("Phiên kết thúc không có người thắng."),
   ).toBeVisible();
@@ -378,6 +379,38 @@ test("decimal precision and double-click produce one bid", async ({
     (await call(request, `/api/auctions/${a.id}/bids`)).totalElements,
   ).toBe(1);
 });
+test("SSE reaches a viewer connected to a different API instance", async ({
+  page,
+  request,
+}) => {
+  const replica = process.env.E2E_REPLICA_URL;
+  test.skip(!replica, "Set E2E_REPLICA_URL to test a second API process");
+  const eventsUrl = new URL("/api/events", replica!).toString();
+  await page.addInitScript((url) => {
+    const Original = window.EventSource;
+    window.EventSource = class extends Original {
+      constructor(_url: string | URL, options?: EventSourceInit) {
+        super(url, options);
+      }
+    };
+  }, eventsUrl);
+  const seller = await account(request),
+    user = await account(request);
+  const a = await create(request, seller, "Cross-instance broadcast");
+  await page.goto(`/auctions/${a.id}`);
+  await expect(
+    page.getByText("Đang cập nhật trực tiếp", { exact: true }),
+  ).toBeVisible();
+  await call(
+    request,
+    `/api/auctions/${a.id}/bids`,
+    "POST",
+    { amount: "125" },
+    user.token,
+  );
+  await expect(page.getByTestId("auction-price")).toHaveText("125 ₫");
+});
+
 test("search pagination direct link and mobile layout", async ({
   page,
   request,

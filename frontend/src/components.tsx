@@ -21,6 +21,11 @@ import {
   Search,
   RefreshCw,
   X,
+  ArrowRight,
+  Clock3,
+  ImageIcon,
+  Plus,
+  Radio,
 } from "lucide-react";
 import { useAuth, useNotice } from "./context";
 import type { Auction, Page } from "./types";
@@ -68,7 +73,7 @@ export function Heading({
         <h1>{title}</h1>
         {description && <p className="muted">{description}</p>}
       </div>
-      {children}
+      {children && <div className="heading-actions">{children}</div>}
     </div>
   );
 }
@@ -82,15 +87,20 @@ export function Loading() {
 }
 export function Empty({
   title = "Chưa có dữ liệu",
+  description,
   children,
 }: {
   title?: string;
+  description?: string;
   children?: ReactNode;
 }) {
   return (
     <div className="empty">
-      <Gavel size={30} />
+      <span className="empty-icon">
+        <Gavel size={29} strokeWidth={1.5} />
+      </span>
       <h3>{title}</h3>
+      {description && <p>{description}</p>}
       {children}
     </div>
   );
@@ -262,8 +272,10 @@ export function AuctionImage({
     />
   ) : (
     <div className={"image-placeholder " + className}>
-      <Gavel size={44} />
-      <span>KTPM AUCTION</span>
+      <span className="placeholder-icon">
+        <ImageIcon size={36} strokeWidth={1.2} />
+      </span>
+      <span>Chưa có ảnh sản phẩm</span>
     </div>
   );
 }
@@ -284,18 +296,94 @@ export function AuctionCard({ auction }: { auction: Auction }) {
             <small>Giá hiện tại</small>
             <strong>{money(auction.currentPrice)}</strong>
           </div>
-          <ArrowUpRight size={22} />
+          <span className="card-arrow">
+            <ArrowUpRight size={21} />
+          </span>
         </div>
-        <p className="card-end">
-          {auction.status === "SCHEDULED" ? "Bắt đầu" : "Kết thúc"}{" "}
-          {date(
-            auction.status === "SCHEDULED"
-              ? auction.startingTime
-              : auction.endingTime,
+        <div className="card-end">
+          <span>
+            <Clock3 size={13} />
+            {auction.status === "SCHEDULED"
+              ? "Bắt đầu sau"
+              : auction.status === "ACTIVE"
+                ? "Thời gian còn lại"
+                : "Đã kết thúc"}
+          </span>
+          {["ACTIVE", "SCHEDULED"].includes(auction.status) ? (
+            <Countdown
+              until={
+                auction.status === "SCHEDULED"
+                  ? auction.startingTime
+                  : auction.endingTime
+              }
+              compact
+            />
+          ) : (
+            <time dateTime={auction.endingTime}>
+              {date(auction.endingTime)}
+            </time>
           )}
-        </p>
+        </div>
       </div>
     </Link>
+  );
+}
+export function Countdown({
+  until,
+  compact = false,
+}: {
+  until: string;
+  compact?: boolean;
+}) {
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const seconds = Math.max(0, Math.floor((Date.parse(until) - now) / 1000));
+  const parts = [
+    Math.floor(seconds / 86400),
+    Math.floor(seconds / 3600) % 24,
+    Math.floor(seconds / 60) % 60,
+    seconds % 60,
+  ];
+  if (compact)
+    return (
+      <strong className="countdown-compact">
+        {parts[0] > 0 ? `${parts[0]}n ` : ""}
+        {parts
+          .slice(1)
+          .map((n) => String(n).padStart(2, "0"))
+          .join(":")}
+      </strong>
+    );
+  return (
+    <div className="countdown" aria-label="Thời gian còn lại">
+      {parts.map((value, i) => (
+        <div key={i}>
+          <strong>{String(value).padStart(2, "0")}</strong>
+          <span>{["Ngày", "Giờ", "Phút", "Giây"][i]}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function AuctionSkeleton() {
+  return (
+    <div className="auction-grid" role="status">
+      <span className="sr-only">Đang tải phiên đấu giá…</span>
+      {Array.from({ length: 3 }, (_, i) => (
+        <div className="auction-card skeleton-card" key={i} aria-hidden="true">
+          <div className="skeleton skeleton-image" />
+          <div className="card-body">
+            <div className="skeleton skeleton-line short" />
+            <div className="skeleton skeleton-line" />
+            <div className="skeleton skeleton-line medium" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
 export function Guard({ admin = false }: { admin?: boolean }) {
@@ -341,8 +429,16 @@ export function Layout() {
   ];
   return (
     <>
+      <a className="skip-link" href="#main-content">
+        Bỏ qua đến nội dung
+      </a>
       <div className="announcement">
-        Sàn đấu giá KTPM <span>·</span> Minh bạch từng lượt đặt giá
+        <div className="container announcement-inner">
+          <span>Khám phá giá trị. Tìm điều bạn thích.</span>
+          <span className="announcement-live">
+            <Radio size={12} /> Minh bạch từng lượt đặt giá
+          </span>
+        </div>
       </div>
       <header className="site-header">
         <div className="container header-inner">
@@ -350,14 +446,25 @@ export function Layout() {
             <span className="brand-icon">
               <Gavel size={23} />
             </span>
-            KTPM<span className="brand-caption">AUCTION</span>
+            <span className="brand-wordmark">
+              KTPM<span className="brand-caption">AUCTION MARKETPLACE</span>
+            </span>
           </Link>
           <nav
             aria-label="Điều hướng chính"
             className={"main-nav " + (menu ? "open" : "")}
           >
             {links.map((link) => (
-              <NavLink key={link.to} to={link.to}>
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) =>
+                  isActive ||
+                  (link.to === "/auctions" && location.pathname === "/")
+                    ? "active"
+                    : ""
+                }
+              >
                 <link.icon size={16} />
                 {link.label}
               </NavLink>
@@ -370,11 +477,21 @@ export function Layout() {
             )}
           </nav>
           <div className="header-user">
+            <Link className="header-create" to="/selling/auctions/new">
+              <Plus size={16} /> Tạo phiên
+            </Link>
             {user ? (
               <>
                 <span className="user-link">
-                  <UserRound size={19} />
-                  <span>{user.username}</span>
+                  <span className="user-avatar">
+                    {user.username.slice(0, 1).toUpperCase()}
+                  </span>
+                  <span className="user-name">
+                    {user.username}
+                    <small>
+                      {user.role === "ADMIN" ? "Quản trị viên" : "Thành viên"}
+                    </small>
+                  </span>
                 </span>
                 <button
                   className="icon-button"
@@ -392,8 +509,8 @@ export function Layout() {
                 </button>
               </>
             ) : (
-              <Link className="button small" to="/login">
-                Đăng nhập
+              <Link className="button small header-login" to="/login">
+                <UserRound size={15} /> Đăng nhập
               </Link>
             )}
             <button
@@ -407,22 +524,58 @@ export function Layout() {
           </div>
         </div>
       </header>
-      <main className="container main-content">
+      <main className="container main-content" id="main-content">
         <Outlet />
       </main>
       <footer className="site-footer">
         <div className="container footer-inner">
           <div>
             <Link to="/" className="brand">
-              KTPM<span className="brand-caption">AUCTION</span>
+              <span className="brand-icon">
+                <Gavel size={22} />
+              </span>
+              <span className="brand-wordmark">
+                KTPM<span className="brand-caption">AUCTION MARKETPLACE</span>
+              </span>
             </Link>
-            <p>Khám phá giá trị. Đặt giá theo cách của bạn.</p>
+            <p>
+              Mỗi món đồ có một câu chuyện.
+              <br />
+              Mỗi lượt đặt giá mở ra một cơ hội.
+            </p>
           </div>
-          <div>
-            <strong>Môi trường thử nghiệm</strong>
-            <p>Đặt giá trực tiếp · Làm mới để theo dõi kết quả</p>
-            <p>Thời gian hiển thị theo giờ Việt Nam (UTC+7)</p>
+          <div className="footer-links">
+            <strong>Khám phá</strong>
+            <Link to="/auctions">Tất cả phiên đấu giá</Link>
+            <Link to="/auctions?status=ACTIVE">
+              Đang diễn ra <ArrowUpRight size={13} />
+            </Link>
+            <Link to="/auctions?status=SCHEDULED">Sắp bắt đầu</Link>
           </div>
+          <div className="footer-links">
+            <strong>Dành cho bạn</strong>
+            <Link to="/selling/auctions/new">Tạo phiên đấu giá</Link>
+            <Link to="/selling">Phiên của tôi</Link>
+            <Link to="/activity">Lịch sử đặt giá</Link>
+          </div>
+          <div className="footer-note">
+            <span className="live-label">
+              <span className="live-dot" /> Cập nhật trực tiếp
+            </span>
+            <p>
+              Giá và kết quả tự động đồng bộ.
+              <br />
+              Thời gian Việt Nam · UTC+7
+            </p>
+          </div>
+        </div>
+        <div className="container footer-bottom">
+          <span>
+            © {new Date().getFullYear()} KTPM Auction. Dự án thực hành.
+          </span>
+          <span>
+            Đặt giá theo cách của bạn <ArrowRight size={13} />
+          </span>
         </div>
       </footer>
     </>

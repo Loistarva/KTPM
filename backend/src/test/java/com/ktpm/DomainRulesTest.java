@@ -63,6 +63,14 @@ class DomainRulesTest {
   }
 
   @Test
+  void currentLeaderCannotBidAgain() {
+    var a = auction();
+    a.setWinnerUserId(2L);
+    assertThrows(
+        BusinessException.class, () -> AuctionRules.canBid(a, 2L, BigDecimal.ONE, Instant.now()));
+  }
+
+  @Test
   void invalidCreationIsRejected() {
     Instant now = Instant.now();
     assertThrows(

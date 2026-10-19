@@ -2,7 +2,7 @@
 
 ## 1. Phạm vi và nguồn
 
-PostgreSQL 16.2; schema do Flyway tạo từ [V1__create_schema.sql](../backend/src/main/resources/db/migration/V1__create_schema.sql). Hibernate dùng `ddl-auto: validate`, không tự tạo/sửa bảng. Có ba bảng nghiệp vụ và bảng kỹ thuật `flyway_schema_history`.
+PostgreSQL 16.2; Flyway [V1](../backend/src/main/resources/db/migration/V1__create_schema.sql) tạo nghiệp vụ, [V2](../backend/src/main/resources/db/migration/V2__phase_two.sql) bổ sung index, lease và outbox. Hibernate dùng `ddl-auto: validate`. Có ba bảng nghiệp vụ, `auction_outbox` và `flyway_schema_history` là bảng kỹ thuật.
 
 ## 2. Sơ đồ quan hệ
 
@@ -91,6 +91,11 @@ API/nghiệp vụ kiểm tra thêm: ảnh HTTP/HTTPS, nội dung không trống,
 | bids_bidder (bidder_id, id DESC) | Bid của người dùng |
 | auctions_seller (seller_id, id DESC) | Phiên của chủ phiên |
 | auctions_due (status, ending_time, starting_time) | Hỗ trợ truy vấn phiên đến hạn |
+| auctions_scheduled_start / auctions_active_end | Partial index theo từng loại phiên đến hạn |
+| auctions_status_page (status, id DESC) | Lọc trạng thái và phân trang |
+| auctions_name_search GIN trigram lower(name) | Tìm chuỗi trong tên, dùng extension pg_trgm |
+| bids_auction_rank / bids_auction_status | Tính lại người thắng và bulk cập nhật trạng thái |
+| auction_outbox_pending / auction_outbox_retention | Relay các sự kiện chưa gửi và dọn sự kiện đã gửi |
 
 Chưa có index UNIQUE riêng cho WON; việc chọn duy nhất bid thắng do nghiệp vụ đảm bảo. Hiệu quả index phải được đo theo truy vấn/workload, không suy ra chỉ từ tên index.
 
@@ -106,7 +111,7 @@ Chưa có index UNIQUE riêng cho WON; việc chọn duy nhất bid thắng do n
 
 Người bán chỉ được xóa phiên của mình chưa có bid. Admin có thể xóa hẳn phiên hoặc tài khoản đã có bid; `AdminService` tính lại giá/người dẫn đầu/kết quả của các phiên còn tồn tại trong transaction. **Xóa trực tiếp bằng SQL không chạy bước tính lại này.**
 
-Đặt bid khóa hàng phiên; bid mới, bid cũ và giá/người dẫn đầu được cập nhật trong cùng transaction. Advisory lock dùng chung cho ghi thông thường và độc quyền khi admin dọn dữ liệu. Xem [kiến trúc backend](KIEN_TRUC_BACKEND.md).
+Đặt bid bằng UPDATE có điều kiện, giữ khóa ghi từ lúc reservation đến commit; bid mới, bid cũ, giá/người dẫn đầu và outbox cùng transaction. Advisory lock dùng chung cho ghi thông thường và độc quyền khi admin dọn dữ liệu. Bảng auctions có thêm lifecycle_claim_token/until, lifecycle_retry_at và lifecycle_attempts. Outbox giữ ID phiên/timestamp/marker đã gửi, không có FK để vẫn phát được sự kiện xóa. Xem [Pha 2](PHA_2.md).
 
 ## 6. Lưu trữ và xem dữ liệu
 

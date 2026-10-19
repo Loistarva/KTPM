@@ -35,7 +35,7 @@ sequenceDiagram
     participant D as PostgreSQL
     U->>A: POST /api/auctions/id/bids
     A->>S: User ID, auction ID, amount
-    S->>D: Transaction + khóa phiên
+    S->>D: Transaction + đọc snapshot, UPDATE có điều kiện
     S->>S: Kiểm tra người bid, giờ và bước giá
     S->>D: Lưu bid, đổi bid cũ, cập nhật giá/người dẫn đầu
     D-->>S: Commit
@@ -44,13 +44,13 @@ sequenceDiagram
     U->>A: Làm mới dữ liệu sau mutation
 ```
 
-Bid đầu ≥ startingPrice; bid tiếp theo ≥ currentPrice + minimumBidStep. Không bid phiên của mình, khi đang dẫn đầu, trước giờ mở hoặc từ giờ kết thúc trở đi. Xung đột nghiệp vụ trả 409; 401/403 là lỗi xác thực/quyền. Khi nhiều request đồng thời, giá hợp lệ được đánh giá sau khi lấy khóa; người dùng phải dựa vào trạng thái mới nhất để thử lại.
+Bid đầu ≥ startingPrice; bid tiếp theo ≥ currentPrice + minimumBidStep. Không bid phiên của mình, khi đang dẫn đầu, trước giờ mở hoặc từ giờ kết thúc trở đi. Xung đột nghiệp vụ trả 409; 401/403 là lỗi xác thực/quyền. Khi nhiều request đồng thời, snapshot cũ được đọc lại và kiểm tra lại trong transaction mới; deadline cũng được kiểm tra sau khi chờ khóa. Amount không tự tăng thay người dùng.
 
 Bid mới WINNING, bid trước OUTBID. Khi kết thúc, bid dẫn đầu thành WON, các bid khác LOST; lưu finalPrice và người thắng. Hệ thống chỉ ghi nhận kết quả, không chuyển tiền hay kiểm tra số dư.
 
 ## 6. Xem và cập nhật giao diện
 
-Công khai: danh sách/tìm/lọc/phân trang, chi tiết và lịch sử bid. Đăng nhập: xem phiên của mình, bid của mình và tạo/bid. Giao diện cập nhật khi tải trang, đổi query, thao tác hoặc Làm mới/F5; không có tự nhận giá mới từ người dùng khác qua realtime/polling.
+Công khai: danh sách/tìm/lọc/phân trang, chi tiết, lịch sử bid và SSE thông báo thay đổi. Đăng nhập: xem phiên của mình, bid của mình và tạo/bid. Giao diện tự cập nhật qua SSE, reconnect đọc lại trạng thái hiện tại; khi mất realtime tự làm mới mỗi 10 giây. Nút Làm mới vẫn hỗ trợ thao tác thủ công.
 
 ## 7. Xóa
 
