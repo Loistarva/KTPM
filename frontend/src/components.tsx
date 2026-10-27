@@ -3,6 +3,7 @@ import {
   cloneElement,
   isValidElement,
   useEffect,
+  useId,
   useRef,
   useState,
   type ReactElement,
@@ -60,17 +61,20 @@ export function Heading({
   title,
   description,
   children,
+  level = 1,
 }: {
   eyebrow?: string;
   title: string;
   description?: string;
   children?: ReactNode;
+  level?: 1 | 2;
 }) {
+  const Title = level === 1 ? "h1" : "h2";
   return (
     <div className="page-heading">
       <div>
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h1>{title}</h1>
+        <Title>{title}</Title>
         {description && <p className="muted">{description}</p>}
       </div>
       {children && <div className="heading-actions">{children}</div>}
@@ -130,31 +134,60 @@ export function Field({
   error,
   hint,
   children,
+  trailing,
 }: {
   label: string;
   error?: string;
   hint?: string;
   children: ReactNode;
+  trailing?: ReactNode;
 }) {
+  const id = useId();
+  const helpId = `${id}-help`;
+  const errorId = `${id}-error`;
+  const controls = Children.map(children, (child) => {
+    if (
+      !isValidElement(child) ||
+      typeof child.type !== "string" ||
+      !["input", "select", "textarea"].includes(child.type)
+    )
+      return child;
+    const control = child as ReactElement<{
+      id?: string;
+      "aria-label"?: string;
+      "aria-invalid"?: boolean;
+      "aria-describedby"?: string;
+    }>;
+    return cloneElement(control, {
+      id,
+      "aria-label": label,
+      "aria-invalid": !!error,
+      "aria-describedby":
+        [control.props["aria-describedby"], hint && helpId, error && errorId]
+          .filter(Boolean)
+          .join(" ") || undefined,
+    });
+  });
   return (
-    <label className="field">
-      <span>{label}</span>
-      {Children.map(children, (child) =>
-        isValidElement(child) &&
-        typeof child.type === "string" &&
-        ["input", "select", "textarea"].includes(child.type)
-          ? cloneElement(
-              child as ReactElement<{
-                "aria-label"?: string;
-                "aria-invalid"?: boolean;
-              }>,
-              { "aria-label": label, "aria-invalid": !!error },
-            )
-          : child,
+    <div className="field">
+      <label className="field-label" htmlFor={id}>
+        {label}
+      </label>
+      {trailing ? (
+        <div className="field-control">
+          {controls}
+          {trailing}
+        </div>
+      ) : (
+        controls
       )}
-      {hint && <small>{hint}</small>}
-      {error && <small className="error-text">{error}</small>}
-    </label>
+      {hint && <small id={helpId}>{hint}</small>}
+      {error && (
+        <small id={errorId} className="error-text" role="alert">
+          {error}
+        </small>
+      )}
+    </div>
   );
 }
 export function Pager({
@@ -417,7 +450,19 @@ export function Layout() {
   const notice = useNotice();
   const location = useLocation();
   const [menu, setMenu] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
   useEffect(() => setMenu(false), [location.pathname]);
+  useEffect(() => {
+    if (!menu) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenu(false);
+        menuButton.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
+  }, [menu]);
   const links = [
     { to: "/auctions", label: "Khám phá", icon: Search },
     ...(user
@@ -451,6 +496,7 @@ export function Layout() {
             </span>
           </Link>
           <nav
+            id="main-navigation"
             aria-label="Điều hướng chính"
             className={"main-nav " + (menu ? "open" : "")}
           >
@@ -514,9 +560,11 @@ export function Layout() {
               </Link>
             )}
             <button
+              ref={menuButton}
               className="icon-button mobile-menu"
               aria-label={menu ? "Đóng menu" : "Mở menu"}
               aria-expanded={menu}
+              aria-controls="main-navigation"
               onClick={() => setMenu((v) => !v)}
             >
               {menu ? <X /> : <Menu />}
@@ -524,7 +572,7 @@ export function Layout() {
           </div>
         </div>
       </header>
-      <main className="container main-content" id="main-content">
+      <main className="container main-content" id="main-content" tabIndex={-1}>
         <Outlet />
       </main>
       <footer className="site-footer">

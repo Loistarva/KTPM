@@ -30,3 +30,20 @@ Build bằng `npm.cmd run build`; kiểm tra định dạng bằng `npm.cmd run 
 Đã dùng môi trường PostgreSQL/API/Vite riêng cho QA giao diện, để dữ liệu thử nghiệm không lẫn với database đang dùng. Kiểm tra bố cục desktop 1440 px và mobile 390/320/300 px, ảnh tải thành công và không tràn ngang; kiểm tra lại các luồng đăng nhập/tạo phiên/bid/SSE/kết quả bằng Playwright.
 
 Kết quả: 32 unit test qua; 8 kịch bản E2E nghiệp vụ và một lượt QA responsive qua. Kịch bản SSE qua replica được bỏ qua trong lượt UI này vì môi trường kiểm thử dùng một backend; kiểm chứng nhiều instance trước đó nằm trong báo cáo Pha 2. Build production và kiểm tra định dạng thành công.
+
+## Cải tiến UX ngày 27/10/2026
+
+Người dùng chọn ưu tiên luồng **tìm phiên và đặt giá**. Lựa chọn thiết kế của Codex là tiếp tục tông xanh–kem và cải thiện các bước đang có, phù hợp với chức năng API hiện tại. Các lựa chọn khác là chỉ đổi phong cách hình ảnh hoặc mở rộng luồng đăng bán; chúng chưa phải trọng tâm của lượt này.
+
+- Rút gọn nội dung banner. Trên điện thoại, ẩn ảnh trang trí và các khối giới thiệu phụ để người dùng tiếp cận ô tìm kiếm sớm hơn; desktop tiếp tục dùng ảnh gốc.
+- Đồng bộ từ khóa khi quay lại/tiến tới trong trình duyệt. Có nút xóa từ khóa, từng bộ lọc và toàn bộ bộ lọc, kể cả khi danh sách vẫn có kết quả. Trạng thái kết nối được lấy từ luồng realtime.
+- Tăng cỡ chữ của nội dung, biểu mẫu và bộ lọc; input trên điện thoại dùng 16 px. Nút thao tác chính có vùng bấm tối thiểu 44 px.
+- Chi tiết phiên có liên kết đến phần đặt giá, thông tin món hàng và lịch sử. Trên mobile, phần đặt giá đứng trước mô tả và có thanh lối tắt ở đáy màn hình cho phiên đang diễn ra.
+- Khi nhập mức giá hợp lệ, hiển thị số tiền chuẩn bị gửi theo định dạng tiền Việt Nam. Mức thấp hơn tối thiểu có nhắc nhở riêng. Nút gợi ý không gửi request; chỉ nút Đặt giá gửi bid. Số tiền nhập được xóa khi chuyển sang một phiên khác.
+- Trường nhập liên kết nhãn, hướng dẫn và lỗi bằng thuộc tính hỗ trợ đọc màn hình. Form đăng nhập/đăng ký có hiện/ẩn mật khẩu. Menu mobile đóng bằng Escape và trả focus về nút mở menu.
+
+Không thay đổi luật đấu giá, kiểu số tiền hoặc cơ chế gửi lại POST. Test sử dụng database riêng trên 8090 và frontend 5174; bản xem trước thông thường tiếp tục dùng 8080/5173 với dữ liệu hiện có.
+
+Kiểm thử hồi quy mới ở `frontend/tests/ux.test.tsx` và `frontend/e2e/ux.spec.ts`. Các kiểm tra bố cục bao gồm desktop/tablet và mobile 390/320/300 px. Không có thay đổi backend trong lượt cải tiến này.
+
+Kết quả cuối: **41 unit test qua**, **9 kịch bản nghiệp vụ E2E và 1 lượt QA responsive qua**. Một kịch bản SSE qua API replica được bỏ qua do môi trường thử nghiệm chỉ có một API. Build production, TypeScript và Prettier qua. Đã kiểm tra thêm chiều rộng 760/768/1024/1440 px và từ khóa 200 ký tự trên mobile, không tràn ngang. Hai ca hồi quy bổ sung xác nhận số tiền dán có khoảng trắng ở đầu/cuối vẫn xem trước và gửi đúng một request với số tiền đã chuẩn hóa; không làm lỗi giao diện.

@@ -1,6 +1,13 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowRight, Gavel, ShieldCheck, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  Gavel,
+  ShieldCheck,
+  Sparkles,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import { api } from "../lib/api";
 import { useAuth } from "../context";
 import { Field, ErrorBox } from "../components";
@@ -10,6 +17,7 @@ export function AuthPage({ register = false }: { register?: boolean }) {
   const [params] = useSearchParams();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [values, setValues] = useState({
     login: "",
     username: "",
@@ -137,9 +145,20 @@ export function AuthPage({ register = false }: { register?: boolean }) {
           <Field
             label="Mật khẩu"
             hint={register ? "Từ 8 ký tự, tối đa 72 byte UTF-8." : undefined}
+            trailing={
+              <button
+                type="button"
+                className="password-toggle"
+                aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                aria-pressed={showPassword}
+                onClick={() => setShowPassword((value) => !value)}
+              >
+                {showPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+              </button>
+            }
           >
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={values.password}
               onChange={change("password")}
               required

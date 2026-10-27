@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   RefreshCw,
@@ -23,10 +23,14 @@ import {
   labels,
 } from "../components";
 import { useApi } from "../lib/queries";
+import { useRealtimeStatus } from "../lib/realtime";
 import type { Auction, Page } from "../types";
 export function ExplorePage({ home = false }: { home?: boolean }) {
   const [params, setParams] = useSearchParams();
-  const [search, setSearch] = useState(params.get("search") || "");
+  const appliedSearch = params.get("search") || "";
+  const [search, setSearch] = useState(appliedSearch);
+  const realtime = useRealtimeStatus();
+  useEffect(() => setSearch(appliedSearch), [appliedSearch]);
   const page = Math.max(0, Number(params.get("page")) || 0);
   const status = params.get("status") || "";
   const statuses = ["", "ACTIVE", "SCHEDULED", "ENDED", "FAILED"];
@@ -54,8 +58,8 @@ export function ExplorePage({ home = false }: { home?: boolean }) {
               <span>Giá bạn chọn.</span>
             </h1>
             <p>
-              Những món đồ thú vị đang chờ chủ nhân mới. Khám phá phiên đấu giá,
-              chọn mức giá của bạn và bắt đầu một câu chuyện mới.
+              Khám phá món đồ bạn thích. Đặt mức giá của bạn, theo dõi diễn biến
+              và chờ khoảnh khắc sở hữu.
             </p>
             <div className="hero-actions">
               <a className="button" href="#auctions">
@@ -129,15 +133,22 @@ export function ExplorePage({ home = false }: { home?: boolean }) {
       )}
       <section className="catalog" id="auctions">
         <Heading
+          level={home ? 2 : 1}
           eyebrow="TÌM MÓN ĐỒ TIẾP THEO CỦA BẠN"
           title={home ? "Khám phá các phiên" : "Các phiên đấu giá"}
-          description="Một lựa chọn mới. Một cơ hội để sở hữu."
+          description="Tìm món đồ bạn thích, chọn phiên phù hợp và bắt đầu đặt giá."
         >
-          <span className="live-label">
-            <span className="live-dot" /> Đấu giá trực tiếp
+          <span
+            className={
+              "live-label " + (realtime ? "connected" : "reconnecting")
+            }
+          >
+            <span className="live-dot" />{" "}
+            {realtime ? "Đang đồng bộ trực tiếp" : "Đang kết nối cập nhật"}
           </span>
           <button
             className="button secondary"
+            disabled={data.isFetching}
             onClick={() => void data.refetch()}
           >
             <RefreshCw
@@ -149,6 +160,8 @@ export function ExplorePage({ home = false }: { home?: boolean }) {
         </Heading>
         <form
           className="filters"
+          role="search"
+          aria-label="Tìm phiên đấu giá"
           onSubmit={(e) => {
             e.preventDefault();
             change("search", search.trim());
@@ -163,6 +176,19 @@ export function ExplorePage({ home = false }: { home?: boolean }) {
               onChange={(e) => setSearch(e.target.value)}
               maxLength={200}
             />
+            {search && (
+              <button
+                className="search-clear"
+                type="button"
+                aria-label="Xóa từ khóa"
+                onClick={() => {
+                  setSearch("");
+                  change("search", "");
+                }}
+              >
+                <X size={17} />
+              </button>
+            )}
           </div>
           <button className="button" type="submit">
             Tìm kiếm <ArrowRight size={15} />
@@ -199,23 +225,45 @@ export function ExplorePage({ home = false }: { home?: boolean }) {
             ))}
           </div>
           {data.data && (
-            <span className="result-count">
+            <span className="result-count" aria-live="polite">
               <strong>{data.data.totalElements}</strong> phiên đấu giá
             </span>
           )}
         </div>
-        {params.get("search") && (
-          <div className="search-summary">
-            Kết quả cho “{params.get("search")}”
+        {(appliedSearch || status) && (
+          <div className="active-filters">
+            <span>Đang lọc:</span>
+            {appliedSearch && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch("");
+                  change("search", "");
+                }}
+                aria-label="Xóa tìm kiếm"
+              >
+                “{appliedSearch}” <X size={14} />
+              </button>
+            )}
+            {status && (
+              <button
+                type="button"
+                onClick={() => change("status", "")}
+                aria-label="Xóa lọc trạng thái"
+              >
+                {labels[status] || status} <X size={14} />
+              </button>
+            )}
             <button
+              className="clear-all-filters"
               type="button"
               onClick={() => {
                 setSearch("");
-                change("search", "");
+                setParams({});
               }}
-              aria-label="Xóa tìm kiếm"
+              aria-label="Xóa tất cả bộ lọc"
             >
-              <X size={13} />
+              Xóa tất cả
             </button>
           </div>
         )}

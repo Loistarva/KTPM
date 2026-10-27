@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   RefreshCw,
@@ -48,7 +48,12 @@ export function AuctionPage() {
   );
   const [amount, setAmount] = useState("");
   const [error, setError] = useState("");
+  const bidInput = useRef<HTMLInputElement>(null);
   const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    setAmount("");
+    setError("");
+  }, [id]);
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
@@ -74,21 +79,24 @@ export function AuctionPage() {
   const active = a.status === "ACTIVE" && !expired;
   const owner = sameId(auth.user?.id, a.sellerId);
   const leader = sameId(auth.user?.id, a.winnerUserId);
+  const normalizedAmount = amount.trim();
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (mutation.isPending) return;
-    const problem = validateMoney(amount);
+    const problem = validateMoney(normalizedAmount);
     if (problem) {
       setError(problem);
+      bidInput.current?.focus();
       return;
     }
-    if (dec(amount).lt(minimumBid(a))) {
+    if (dec(normalizedAmount).lt(minimumBid(a))) {
       setError("Giá tối thiểu là " + money(minimumBid(a).toString()));
+      bidInput.current?.focus();
       return;
     }
     setError("");
     try {
-      await mutation.mutateAsync(amount.trim());
+      await mutation.mutateAsync(normalizedAmount);
     } catch {}
   }
   return (
@@ -123,6 +131,16 @@ export function AuctionPage() {
           ? "Đang cập nhật trực tiếp"
           : "Đang kết nối lại · tự động làm mới mỗi 10 giây"}
       </p>
+      <nav className="detail-section-links" aria-label="Nội dung phiên đấu giá">
+        <a href="#bid-panel">
+          <Gavel size={15} /> {active ? "Đặt giá" : "Thông tin phiên"}
+        </a>
+        <a href="#product-info">Thông tin món hàng</a>
+        <a href="#bid-history">
+          Lịch sử đặt giá{" "}
+          {history.data && <span>{history.data.totalElements}</span>}
+        </a>
+      </nav>
       <div className="detail-grid">
         <section className="product-column">
           <div className="product-gallery">
@@ -131,7 +149,7 @@ export function AuctionPage() {
               {labels[a.condition] || a.condition}
             </span>
           </div>
-          <div className="panel product-description">
+          <div className="panel product-description" id="product-info">
             <p className="eyebrow">TÌM HIỂU TRƯỚC KHI ĐẶT GIÁ</p>
             <h2>Thông tin món hàng</h2>
             <p className="description">{a.description}</p>
@@ -145,10 +163,19 @@ export function AuctionPage() {
             </div>
           </div>
         </section>
-        <section className="panel bid-panel">
+        <section
+          className="panel bid-panel"
+          id="bid-panel"
+          aria-label="Thông tin và đặt giá"
+        >
           <div className="bid-panel-heading">
             <span className="eyebrow">
-              <Gavel size={15} /> ĐẤU GIÁ TRỰC TIẾP
+              <Gavel size={15} />{" "}
+              {active
+                ? "ĐẤU GIÁ TRỰC TIẾP"
+                : a.status === "SCHEDULED"
+                  ? "SẮP DIỄN RA"
+                  : "KẾT QUẢ PHIÊN"}
             </span>
             <Status value={a.status} />
           </div>
@@ -201,7 +228,14 @@ export function AuctionPage() {
                   : "Giá và kết quả được cập nhật theo thời gian thực."}
             </p>
           )}
-          {!auth.user ? (
+          {!auth.user && !active ? (
+            <Link
+              className="button secondary full"
+              to="/auctions?status=ACTIVE"
+            >
+              Khám phá phiên đang diễn ra <ArrowUpRight size={17} />
+            </Link>
+          ) : !auth.user ? (
             <Link
               className="button full"
               to={`/login?returnTo=/auctions/${a.id}`}
@@ -225,11 +259,15 @@ export function AuctionPage() {
                 error={error}
               >
                 <input
+                  ref={bidInput}
                   value={amount}
                   className="bid-amount-input"
                   placeholder="Nhập mức giá của bạn"
                   disabled={leader}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) => {
+                    setAmount(e.target.value);
+                    setError("");
+                  }}
                   inputMode="decimal"
                   required
                   maxLength={20}
@@ -254,6 +292,28 @@ export function AuctionPage() {
                   </button>
                 ))}
               </div>
+              {normalizedAmount &&
+                !validateMoney(normalizedAmount) &&
+                !leader && (
+                  <div
+                    className={
+                      "bid-review " +
+                      (dec(normalizedAmount).lt(minimumBid(a))
+                        ? "below-minimum"
+                        : "")
+                    }
+                    role="status"
+                    aria-label="Mức giá chuẩn bị gửi"
+                  >
+                    <span>Mức giá chuẩn bị gửi</span>
+                    <strong>{money(normalizedAmount)}</strong>
+                    <small>
+                      {dec(normalizedAmount).lt(minimumBid(a))
+                        ? `Chưa đạt mức tối thiểu ${money(minimumBid(a).toString())}.`
+                        : "Chỉ gửi khi bạn bấm Đặt giá."}
+                    </small>
+                  </div>
+                )}
               <button
                 className="button full bid-submit"
                 disabled={mutation.isPending || leader}
@@ -271,7 +331,7 @@ export function AuctionPage() {
           </p>
         </section>
       </div>
-      <section className="panel bid-history">
+      <section className="panel bid-history" id="bid-history">
         <div className="history-heading">
           <div>
             <p className="eyebrow">DIỄN BIẾN CỦA PHIÊN</p>
@@ -325,6 +385,24 @@ export function AuctionPage() {
           onChange={(p) => setParams({ page: String(p) })}
         />
       </section>
+      {active && !owner && (
+        <div className="mobile-bid-bar" aria-label="Lối tắt đặt giá">
+          <div>
+            <span>{leader ? "Bạn đang dẫn đầu" : "Giá hiện tại"}</span>
+            <strong>{money(a.currentPrice)}</strong>
+          </div>
+          {!auth.user ? (
+            <Link className="button" to={`/login?returnTo=/auctions/${a.id}`}>
+              Đăng nhập <ArrowUpRight size={17} />
+            </Link>
+          ) : (
+            <a className="button" href={leader ? "#bid-history" : "#bid-panel"}>
+              {leader ? "Xem lịch sử" : "Đến phần đặt giá"}{" "}
+              <ArrowUpRight size={17} />
+            </a>
+          )}
+        </div>
+      )}
     </>
   );
 }
